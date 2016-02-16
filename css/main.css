@@ -42,3 +42,11 @@ body {
 .point-label {
     font-size: 12px;
 }
+
+.graphtitle {
+    font-size: 14px;
+}
+
+.bar {
+    fill: #1696d2;
+}
