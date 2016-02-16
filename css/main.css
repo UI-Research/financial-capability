@@ -1,6 +1,9 @@
+body {
+    font-family: Lato;
+}
 
-body{
-	font-family: Lato;
+.fullwidth {
+    width: 100%;
 }
 
 .axis,

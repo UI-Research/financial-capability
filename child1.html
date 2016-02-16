@@ -12,6 +12,8 @@
 </head>
 
 <body>
+    <h2>Eventually: distribution of assets, something like this</h2>
+    <img src="img/incomedist.png" class="fullwidth">
     <div id="graphic"></div>
 
     <script type="text/javascript" src="lib/modernizr.svg.min.js"></script>
@@ -20,7 +22,7 @@
     <script type="text/javascript" src="js/main.js"></script>
 
     <script>
-        $(window).load(function () {
+        /*$(window).load(function () {
             if (Modernizr.svg) {
                 d3.csv(main_data_url, function (error, rates) {
                     data = rates;
@@ -31,7 +33,7 @@
             } else {
                 pymChild = new pym.Child({});
             }
-        });
+        });*/
         var pymChild = new pym.Child();
     </script>
 </body>

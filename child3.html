@@ -12,8 +12,14 @@
 </head>
 
 <body>
+    <h2>Share of families who experience hardship after financial shock, by savings</h2>
+    <img src="img/bars-excel.png" class="fullwidth">
+    <h2>Share of families who experience hardship after financial shock, by savings and income thirds</h2>
     <div id="graphic"></div>
+    <h2>Or maybe it's a heatmap</h2>
+    <img src="img/heatmap-excel.png">
 
+    <script type="text/javascript" src="lib/jquery-2.2.0.min.js"></script>
     <script type="text/javascript" src="lib/modernizr.svg.min.js"></script>
     <script type="text/javascript" src="lib/pym.min.js"></script>
     <script type="text/javascript" src="lib/d3.v3.min.js"></script>
@@ -21,7 +27,7 @@
     <script>
         $(window).load(function () {
             if (Modernizr.svg) {
-                d3.csv(main_data_url, function (error, rates) {
+                d3.csv(graphic3_data_url, function (error, rates) {
                     data = rates;
                     pymChild = new pym.Child({
                         renderCallback: drawGraphic3
