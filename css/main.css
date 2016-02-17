@@ -60,3 +60,15 @@ body {
 .annotation {
     font-size: 13px;
 }
+
+.hardship1_0 {
+    stroke: black;
+}
+
+.hardship2_0 {
+    stroke: purple;
+}
+
+.hardship3_0 {
+    stroke: red;
+}

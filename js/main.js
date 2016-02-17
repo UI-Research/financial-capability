@@ -7,6 +7,12 @@ var $graphic = $('#graphic');
 var COLORS = ["#1696d2", "#fdbf11"];
 var COLORS3 = ["#fdbf11", "#ccc", "#1696d2"];
 var numticks = 6;
+var HARDSHIPS = {
+    hardship1: "Received public benefits",
+    hardship2: "Missed utility payment",
+    hardship3: "Missed housing payment",
+    hardship4: "Evicted"
+};
 
 function wrap(text, width) {
     text.each(function () {
@@ -35,6 +41,7 @@ function wrap(text, width) {
 function drawGraphic2(container_width) {
 
     var LABELS = ["Families who experienced financial shocks", "Families without financial shocks"];
+    var VALUES = ["shocks1", "shocks0"]
 
     data.forEach(function (d) {
         d.shocks1 = +d.shocks1;
@@ -64,118 +71,12 @@ function drawGraphic2(container_width) {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    var x1 = d3.scale.ordinal()
-        .rangeRoundBands([0, width / 2 - 30], .1)
-        .domain(data.map(function (d) {
-            return d.hardship;
-        }));
-
-    var xAxis = d3.svg.axis()
-        .scale(x1)
-        .tickSize(0)
-        .orient("bottom");
-
-    var x2 = d3.scale.ordinal()
-        .rangeRoundBands([width / 2 + 30, width], .1)
-        .domain(data.map(function (d) {
-            return d.hardship;
-        }));
-
-    var xAxis = d3.svg.axis()
-        .scale(x1)
-        .tickSize(0)
-        .orient("bottom");
-
-    var xAxis2 = d3.svg.axis()
-        .scale(x2)
-        .tickSize(0)
-        .orient("bottom");
-
-    var gx = svg.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .attr("class", "x axis-show")
-        .call(xAxis)
-        .selectAll(".tick text")
-        .call(wrap, x1.rangeBand());
-
-    var gx2 = svg.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .attr("class", "x axis-show")
-        .call(xAxis2)
-        .selectAll(".tick text")
-        .call(wrap, x2.rangeBand());
-
-    var y = d3.scale.linear()
-        .range([height, 0])
-        .domain([0, d3.max(data, function (d) {
-            return d.shocks1;
-        })]);
-
-    /*var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient("left")
-        .tickFormat(d3.format("%"))
-        .ticks(5)
-        .tickSize(-width);
-
-    var gy = svg.append("g")
-        .attr("class", "y axis")
-        .call(yAxis);
-
-    gy.selectAll("g").filter(function (d) {
-            return d;
-        })
-        .classed("minor", true);
-
-    gy.selectAll("text")
-        .attr("x", -4)
-        .attr("dy", 4);*/
-
-    var titles = svg.selectAll(".graphtitle")
-        .data(LABELS)
-        .enter()
-        .append("g")
-        .attr("class", "graphtitle");
-
-    titles.append("text")
-        .attr("x", function (d, i) {
-            return i * (30 + width / 2) + 10;
-        })
-        .attr("y", -30)
-        .attr("text-anchor", "start")
-        .text(function (d, i) {
-            return d;
-        });
-
     var bars = svg.selectAll(".bar")
         .data(data)
         .enter()
         .append("g")
         .attr("class", "bar");
 
-    bars.append("rect")
-        .attr("x", function (d) {
-            return x1(d.hardship);
-        })
-        .attr("width", x1.rangeBand())
-        .attr("y", function (d) {
-            return y(d.shocks1);
-        })
-        .attr("height", function (d) {
-            return height - y(d.shocks1);
-        })
-
-    bars.append("rect")
-        .attr("x", function (d) {
-            return x2(d.hardship);
-        })
-        .attr("width", x2.rangeBand())
-        .attr("y", function (d) {
-            return y(d.shocks0);
-        })
-        .attr("height", function (d) {
-            return height - y(d.shocks0);
-        })
 
     var barlabels = svg.selectAll(".point-label")
         .data(data)
@@ -183,29 +84,69 @@ function drawGraphic2(container_width) {
         .append("g")
         .attr("class", "point-label");
 
-    barlabels.append("text")
-        .attr("y", function (d) {
-            return y(d.shocks1) - 8;
-        })
-        .attr("x", function (d) {
-            return x1(d.hardship) + x1.rangeBand() / 2;
-        })
-        .attr("text-anchor", "middle")
-        .text(function (d) {
-            return d3.format("%")(d.shocks1);
-        });
+    var y = d3.scale.linear()
+        .range([height, 0])
+        .domain([0, d3.max(data, function (d) {
+            return d.shocks1;
+        })]);
 
-    barlabels.append("text")
-        .attr("y", function (d) {
-            return y(d.shocks0) - 8;
-        })
-        .attr("x", function (d) {
-            return x2(d.hardship) + x2.rangeBand() / 2;
-        })
-        .attr("text-anchor", "middle")
-        .text(function (d) {
-            return d3.format("%")(d.shocks0);
-        });
+    for (i = 0; i < VALUES.length; i++) {
+        var x = d3.scale.ordinal()
+            .rangeRoundBands(
+                [i * (width / 2) + (i * 30), (i + 1) * (width / 2) - ((1 - i) * 30)], .1)
+            .domain(data.map(function (d) {
+                return d.hardship;
+            }));
+
+        var xAxis = d3.svg.axis()
+            .scale(x)
+            .tickSize(0)
+            .tickFormat(function (d) {
+                return HARDSHIPS[d];
+            })
+            .orient("bottom");
+
+        var gx = svg.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .attr("class", "x axis-show")
+            .call(xAxis)
+            .selectAll(".tick text")
+            .call(wrap, x.rangeBand());
+
+        bars.append("rect")
+            .attr("class", function (d) {
+                return d.hardship + "_" + i;
+            })
+            .attr("x", function (d) {
+                return x(d.hardship);
+            })
+            .attr("width", x.rangeBand())
+            .attr("y", function (d) {
+                return y(d[VALUES[i]]);
+            })
+            .attr("height", function (d) {
+                return height - y(d[VALUES[i]]);
+            })
+
+        barlabels.append("text")
+            .attr("y", function (d) {
+                return y(d[VALUES[i]]) - 8;
+            })
+            .attr("x", function (d) {
+                return x(d.hardship) + x.rangeBand() / 2;
+            })
+            .attr("text-anchor", "middle")
+            .text(function (d) {
+                return d3.format("%")(d[VALUES[i]]);
+            });
+
+        var titles = svg.append("text")
+            .attr("class", "graphtitle")
+            .attr("x", i * (30 + width / 2) + 10)
+            .attr("y", -30)
+            .attr("text-anchor", "start")
+            .text(LABELS[i]);
+    }
 }
 
 /*function drawGraphic2(container_width) {
@@ -361,11 +302,12 @@ function drawGraphic2(container_width) {
 function drawGraphic3a(container_width) {
 
     var LABELS = ["Received public benefits", "Missed utility payment", "Missed housing payment"];
+    var VALUES = ["hardship1", "hardship2", "hardship3"];
 
     data.forEach(function (d) {
-        d.benefits = +d.benefits;
-        d.housing = +d.housing;
-        d.utility = +d.utility;
+        d.hardship1 = +d.hardship1;
+        d.hardship2 = +d.hardship2;
+        d.hardship3 = +d.hardship3;
     });
 
     if (container_width == undefined || isNaN(container_width)) {
@@ -397,36 +339,21 @@ function drawGraphic3a(container_width) {
             return d.assets;
         }));
 
+    var max = [];
     //calculate spacing of segments
-    var max1 = d3.max(data, function (d) {
-        return d.benefits;
-    });
-    var max2 = d3.max(data, function (d) {
-        return d.utility;
-    });
-    var max3 = d3.max(data, function (d) {
-        return d.housing;
-    });
-    var prop1 = max1 / (max1 + max2 + max3) * 0.9,
-        prop2 = max2 / (max1 + max2 + max3) * 0.9,
-        prop3 = max3 / (max1 + max2 + max3) * 0.9;
+    for (i = 0; i < VALUES.length; i++) {
+        max[i] = d3.max(data, function (d) {
+            return (d[VALUES[i]]);
+        });
+    }
+    var prop = [];
+    for (i = 0; i < VALUES.length; i++) {
+        prop[i] = 0.9 * max[i] / (max[0] + max[1] + max[2]);
+    }
 
     var padding = 40;
 
-    var STARTS = [0, width * prop1, width * (prop1 + prop2)];
-
-    //X scale for each bar segment
-    var x1 = d3.scale.linear()
-        .range([STARTS[0], STARTS[1]])
-        .domain([0, max1]);
-
-    var x2 = d3.scale.linear()
-        .range([STARTS[1] + padding, STARTS[2] + padding])
-        .domain([0, max2]);
-
-    var x3 = d3.scale.linear()
-        .range([STARTS[2] + 2 * padding, width * (prop1 + prop2 + prop3) + 2 * padding])
-        .domain([0, max3]);
+    var STARTS = [0, width * prop[0], width * (prop[0] + prop[1]), width * (prop[0] + prop[1] + prop[2])];
 
     var yAxis = d3.svg.axis()
         .scale(y)
@@ -462,77 +389,45 @@ function drawGraphic3a(container_width) {
         .append("g")
         .attr("class", "bar");
 
-    bars.append("rect")
-        .attr("x", x1(0))
-        .attr("width", function (d) {
-            return x1(d.benefits);
-        })
-        .attr("y", function (d) {
-            return y(d.assets);
-        })
-        .attr("height", y.rangeBand())
-
-    bars.append("rect")
-        .attr("x", x2(0))
-        .attr("width", function (d) {
-            return Math.abs(x2(0) - (x2(d.utility)));
-        })
-        .attr("y", function (d) {
-            return y(d.assets);
-        })
-        .attr("height", y.rangeBand())
-
-    bars.append("rect")
-        .attr("x", x3(0))
-        .attr("width", function (d) {
-            return Math.abs(x3(0) - (x3(d.housing)));
-        })
-        .attr("y", function (d) {
-            return y(d.assets);
-        })
-        .attr("height", y.rangeBand())
-
     var barlabels = svg.selectAll(".point-label")
         .data(data)
         .enter()
         .append("g")
         .attr("class", "point-label");
 
-    barlabels.append("text")
-        .attr("x", function (d) {
-            return x1(d.benefits) + 4;
-        })
-        .attr("y", function (d) {
-            return y(d.assets) + y.rangeBand() / 2;
-        })
-        .text(function (d) {
-            return d3.format("%")(d.benefits);
-        });
+    for (i = 0; i < VALUES.length; i++) {
+        var x = d3.scale.linear()
+            .range([STARTS[i] + (i * padding), STARTS[i + 1] + (i * padding)])
+            .domain([0, max[i]]);
 
-    barlabels.append("text")
-        .attr("x", function (d) {
-            return x2(d.utility) + 4;
-        })
-        .attr("y", function (d) {
-            return y(d.assets) + y.rangeBand() / 2;
-        })
-        .text(function (d) {
-            return d3.format("%")(d.utility);
-        });
+        bars.append("rect")
+            .attr("class", VALUES[i] + "_0")
+            .attr("x", x(0))
+            .attr("width", function (d) {
+                return Math.abs(x(0) - x(d[VALUES[i]]));
+            })
+            .attr("y", function (d) {
+                return y(d.assets);
+            })
+            .attr("height", y.rangeBand())
 
-    barlabels.append("text")
-        .attr("x", function (d) {
-            return x3(d.housing) + 4;
-        })
-        .attr("y", function (d) {
-            return y(d.assets) + y.rangeBand() / 2;
-        })
-        .text(function (d) {
-            return d3.format("%")(d.housing);
-        });
+        barlabels.append("text")
+            .attr("x", function (d) {
+                return x(d[VALUES[i]]) + 4;
+            })
+            .attr("y", function (d) {
+                return y(d.assets) + y.rangeBand() / 2;
+            })
+            .text(function (d) {
+                return d3.format("%")(d[VALUES[i]]);
+            });
+    }
+
 }
 
 function drawGraphic3(container_width) {
+
+    var VALUES = ["income1", "income2", "income3"];
 
     data.forEach(function (d) {
         d.income1 = +d.income1;
@@ -611,70 +506,39 @@ function drawGraphic3(container_width) {
         .enter()
         .append("g");
 
-    lines.append("line")
-        .attr("class", "chartline")
-        .attr("y1", function (d) {
-            return y(d.assets) + y.rangeBand() / 3;
-        })
-        .attr("y2", function (d) {
-            return y(d.assets) + y.rangeBand() / 3;
-        })
-        .attr("x1", function (d) {
-            return x(d.income1);
-        })
-        .attr("x2", function (d) {
-            return x(d.income2);
-        });
-
-    lines.append("line")
-        .attr("class", "chartline")
-        .attr("y1", function (d) {
-            return y(d.assets) + y.rangeBand() / 3;
-        })
-        .attr("y2", function (d) {
-            return y(d.assets) + y.rangeBand() / 3;
-        })
-        .attr("x1", function (d) {
-            return x(d.income2);
-        })
-        .attr("x2", function (d) {
-            return x(d.income3);
-        });
+    for (i = 0; i < (VALUES.length - 1); i++) {
+        lines.append("line")
+            .attr("class", "chartline")
+            .attr("y1", function (d) {
+                return y(d.assets) + y.rangeBand() / 3;
+            })
+            .attr("y2", function (d) {
+                return y(d.assets) + y.rangeBand() / 3;
+            })
+            .attr("x1", function (d) {
+                return x(d[VALUES[i]]);
+            })
+            .attr("x2", function (d) {
+                return x(d[VALUES[i + 1]]);
+            });
+    }
 
     var circles = svg.selectAll(".dot")
         .data(data)
         .enter()
         .append("g")
 
-    circles.append("circle")
-        .attr("r", 7)
-        .attr("cx", function (d) {
-            return x(d.income1);
-        })
-        .attr("cy", function (d) {
-            return y(d.assets) + y.rangeBand() / 3;
-        })
-        .attr("fill", COLORS3[0])
-
-    circles.append("circle")
-        .attr("r", 7)
-        .attr("cx", function (d) {
-            return x(d.income2);
-        })
-        .attr("cy", function (d) {
-            return y(d.assets) + y.rangeBand() / 3;
-        })
-        .attr("fill", COLORS3[1])
-
-    circles.append("circle")
-        .attr("r", 7)
-        .attr("cx", function (d) {
-            return x(d.income3);
-        })
-        .attr("cy", function (d) {
-            return y(d.assets) + y.rangeBand() / 3;
-        })
-        .attr("fill", COLORS3[2])
+    for (i = 0; i < VALUES.length; i++) {
+        circles.append("circle")
+            .attr("r", 7)
+            .attr("cx", function (d) {
+                return x(d[VALUES[i]]);
+            })
+            .attr("cy", function (d) {
+                return y(d.assets) + y.rangeBand() / 3;
+            })
+            .attr("fill", COLORS3[i])
+    }
 
     var circlelabel = svg.selectAll(".point-label")
         .data(data)
@@ -743,7 +607,7 @@ function drawGraphic3(container_width) {
                 y = text.attr("y"),
                 dy = lineHeight * 1.2
                 //dy = parseFloat(text.attr("dy")),
-                tspan = text.text(null).append("tspan").attr("x", startingx).attr("y", y).attr("dy", dy + "em");
+            tspan = text.text(null).append("tspan").attr("x", startingx).attr("y", y).attr("dy", dy + "em");
             while (word = words.pop()) {
                 line.push(word);
                 tspan.text(line.join(" "));
