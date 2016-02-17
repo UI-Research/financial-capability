@@ -8,8 +8,32 @@ var COLORS = ["#1696d2", "#fdbf11"];
 var COLORS3 = ["#fdbf11", "#ccc", "#1696d2"];
 var numticks = 6;
 
+function wrap(text, width) {
+    text.each(function () {
+        var text = d3.select(this),
+            words = text.text().split(/\s+/).reverse(),
+            word,
+            line = [],
+            lineNumber = 0,
+            lineHeight = 1.1, // ems
+            y = text.attr("y"),
+            dy = parseFloat(text.attr("dy")),
+            tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+        while (word = words.pop()) {
+            line.push(word);
+            tspan.text(line.join(" "));
+            if (tspan.node().getComputedTextLength() > width) {
+                line.pop();
+                tspan.text(line.join(" "));
+                line = [word];
+                tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+            }
+        }
+    });
+}
+
 function drawGraphic2(container_width) {
-    
+
     var LABELS = ["Families who experienced financial shocks", "Families without financial shocks"];
 
     data.forEach(function (d) {
@@ -106,7 +130,7 @@ function drawGraphic2(container_width) {
     gy.selectAll("text")
         .attr("x", -4)
         .attr("dy", 4);*/
-    
+
     var titles = svg.selectAll(".graphtitle")
         .data(LABELS)
         .enter()
@@ -115,7 +139,7 @@ function drawGraphic2(container_width) {
 
     titles.append("text")
         .attr("x", function (d, i) {
-            return i * (30 + width/2) + 10;
+            return i * (30 + width / 2) + 10;
         })
         .attr("y", -30)
         .attr("text-anchor", "start")
@@ -170,7 +194,7 @@ function drawGraphic2(container_width) {
         .text(function (d) {
             return d3.format("%")(d.shocks1);
         });
-    
+
     barlabels.append("text")
         .attr("y", function (d) {
             return y(d.shocks0) - 8;
@@ -182,31 +206,6 @@ function drawGraphic2(container_width) {
         .text(function (d) {
             return d3.format("%")(d.shocks0);
         });
-
-
-    function wrap(text, width) {
-        text.each(function () {
-            var text = d3.select(this),
-                words = text.text().split(/\s+/).reverse(),
-                word,
-                line = [],
-                lineNumber = 0,
-                lineHeight = 1.1, // ems
-                y = text.attr("y"),
-                dy = parseFloat(text.attr("dy")),
-                tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
-            while (word = words.pop()) {
-                line.push(word);
-                tspan.text(line.join(" "));
-                if (tspan.node().getComputedTextLength() > width) {
-                    line.pop();
-                    tspan.text(line.join(" "));
-                    line = [word];
-                    tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
-                }
-            }
-        });
-    }
 }
 
 /*function drawGraphic2(container_width) {
@@ -360,7 +359,7 @@ function drawGraphic2(container_width) {
 }*/
 
 function drawGraphic3a(container_width) {
-    
+
     var LABELS = ["Received public benefits", "Missed utility payment", "Missed housing payment"];
 
     data.forEach(function (d) {
@@ -376,7 +375,7 @@ function drawGraphic3a(container_width) {
     var chart_aspect_height = 0.4;
     var margin = {
         top: 35,
-        right: 80,
+        right: 40,
         bottom: 15,
         left: 100
     };
@@ -398,23 +397,36 @@ function drawGraphic3a(container_width) {
             return d.assets;
         }));
 
+    //calculate spacing of segments
+    var max1 = d3.max(data, function (d) {
+        return d.benefits;
+    });
+    var max2 = d3.max(data, function (d) {
+        return d.utility;
+    });
+    var max3 = d3.max(data, function (d) {
+        return d.housing;
+    });
+    var prop1 = max1 / (max1 + max2 + max3) * 0.9,
+        prop2 = max2 / (max1 + max2 + max3) * 0.9,
+        prop3 = max3 / (max1 + max2 + max3) * 0.9;
+
+    var padding = 40;
+
+    var STARTS = [0, width * prop1, width * (prop1 + prop2)];
+
+    //X scale for each bar segment
     var x1 = d3.scale.linear()
-        .range([0, (width / 3) - 35])
-        .domain([0, d3.max(data, function (d) {
-            return d.benefits;
-        })]);
+        .range([STARTS[0], STARTS[1]])
+        .domain([0, max1]);
 
     var x2 = d3.scale.linear()
-        .range([width / 3, (width * (2 / 3)) - 35])
-        .domain([0, d3.max(data, function (d) {
-            return d.benefits;
-        })]);
+        .range([STARTS[1] + padding, STARTS[2] + padding])
+        .domain([0, max2]);
 
     var x3 = d3.scale.linear()
-        .range([(width * (2 / 3)), width - 35])
-        .domain([0, d3.max(data, function (d) {
-            return d.benefits;
-        })]);
+        .range([STARTS[2] + 2 * padding, width * (prop1 + prop2 + prop3) + 2 * padding])
+        .domain([0, max3]);
 
     var yAxis = d3.svg.axis()
         .scale(y)
@@ -436,7 +448,7 @@ function drawGraphic3a(container_width) {
 
     titles.append("text")
         .attr("x", function (d, i) {
-            return i * width / 3;
+            return STARTS[i] + i * padding;
         })
         .attr("y", -10)
         .attr("text-anchor", "start")
@@ -635,7 +647,7 @@ function drawGraphic3(container_width) {
         .append("g")
 
     circles.append("circle")
-        .attr("r", 5.5)
+        .attr("r", 7)
         .attr("cx", function (d) {
             return x(d.income1);
         })
@@ -645,7 +657,7 @@ function drawGraphic3(container_width) {
         .attr("fill", COLORS3[0])
 
     circles.append("circle")
-        .attr("r", 5.5)
+        .attr("r", 7)
         .attr("cx", function (d) {
             return x(d.income2);
         })
@@ -655,7 +667,7 @@ function drawGraphic3(container_width) {
         .attr("fill", COLORS3[1])
 
     circles.append("circle")
-        .attr("r", 5.5)
+        .attr("r", 7)
         .attr("cx", function (d) {
             return x(d.income3);
         })
@@ -703,5 +715,47 @@ function drawGraphic3(container_width) {
         })
         .attr("text-anchor", "end")
         .text("Top income");
+
+    //annotate: main point is that low income with assets have less hardship than high income without assets
+    var annotateshape = svg.append("rect")
+        .attr("class", "annotate-shape")
+        .attr("x", x(0.20))
+        .attr("y", 2.5 * y.rangeBand())
+        .attr("width", x(0.23) - x(0.20))
+        .attr("height", 3.5 * y.rangeBand());
+
+    var annotation = svg.append("text")
+        .attr("class", "annotation")
+        //.attr("x", x(0.10))
+        .attr("y", 3.6 * y.rangeBand())
+        .attr("text-anchor", "start")
+        .text("Low earners with modest savings have less hardship than high earners with low savings")
+        .call(wrap2, width / 4, x(0.102));
+
+    function wrap2(text, width, startingx) {
+        text.each(function () {
+            var text = d3.select(this),
+                words = text.text().split(/\s+/).reverse(),
+                word,
+                line = [],
+                lineNumber = 0,
+                lineHeight = 1.1, // ems
+                y = text.attr("y"),
+                dy = lineHeight * 1.2
+                //dy = parseFloat(text.attr("dy")),
+                tspan = text.text(null).append("tspan").attr("x", startingx).attr("y", y).attr("dy", dy + "em");
+            while (word = words.pop()) {
+                line.push(word);
+                tspan.text(line.join(" "));
+                if (tspan.node().getComputedTextLength() > width) {
+                    line.pop();
+                    tspan.text(line.join(" "));
+                    line = [word];
+                    tspan = text.append("tspan").attr("x", startingx).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+                }
+            }
+        });
+    }
+
 
 }
