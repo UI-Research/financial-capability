@@ -66,6 +66,11 @@ body {
     font-size: 13px;
 }
 
+.axistitle {
+    font-size: 13px;
+    font-style: italic;
+}
+
 .hardship1_0 {
     stroke: black;
 }

@@ -38,6 +38,31 @@ function wrap(text, width) {
     });
 }
 
+function wrap2(text, width, startingx) {
+    text.each(function () {
+        var text = d3.select(this),
+            words = text.text().split(/\s+/).reverse(),
+            word,
+            line = [],
+            lineNumber = 0,
+            lineHeight = 1.1, // ems
+            y = text.attr("y"),
+            dy = lineHeight * 1.2
+            //dy = parseFloat(text.attr("dy")),
+        tspan = text.text(null).append("tspan").attr("x", startingx).attr("y", y).attr("dy", dy + "em");
+        while (word = words.pop()) {
+            line.push(word);
+            tspan.text(line.join(" "));
+            if (tspan.node().getComputedTextLength() > width) {
+                line.pop();
+                tspan.text(line.join(" "));
+                line = [word];
+                tspan = text.append("tspan").attr("x", startingx).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+            }
+        }
+    });
+}
+
 function drawGraphic1(container_width) {
 
     data.forEach(function (d) {
@@ -50,7 +75,7 @@ function drawGraphic1(container_width) {
 
     var chart_aspect_height = 0.6;
     var margin = {
-        top: 55,
+        top: 85,
         right: 15,
         bottom: 55,
         left: 15
@@ -127,6 +152,20 @@ function drawGraphic1(container_width) {
         .text(function (d) {
             return d3.format("%")(d.share);
         });
+
+    var annotation = svg.append("text")
+        .attr("class", "annotation")
+        .attr("y", y(0.2))
+        .attr("text-anchor", "start")
+        .text("Over half of families have less than $2,000 in savings")
+        .call(wrap2, 0.35*width, width/6);
+    
+    var annotation2 = svg.append("text")
+        .attr("class", "annotation")
+        .attr("y", -60)
+        .attr("text-anchor", "start")
+        .text("1 in 4 families has $20,000 or more in savings")
+        .call(wrap2, 0.24*width, 0.8*width);
 }
 
 
@@ -458,6 +497,14 @@ function drawGraphic3a(container_width) {
 
     gy.selectAll("text")
         .attr("dx", -4);
+    
+    //label axis
+    var axistitle = svg.append("text")
+        .attr("class", "axistitle")
+        .attr("x", -5)
+        .attr("y", 2)
+        .attr("text-anchor", "end")
+        .text("Savings");
 
     var titles = svg.selectAll(".subtitle")
         .data(LABELS)
@@ -469,7 +516,7 @@ function drawGraphic3a(container_width) {
         .attr("x", function (d, i) {
             return STARTS[i] + i * padding;
         })
-        .attr("y", -10)
+        .attr("y", -20)
         .attr("text-anchor", "start")
         .text(function (d, i) {
             return d;
@@ -516,6 +563,8 @@ function drawGraphic3a(container_width) {
     }
 
 }
+
+//Annual family income thirds are composed as follows: bottom third, $0-$32,280; middle third, $32,280-$72,120; top third, $72,120 plus.
 
 function drawGraphic3(container_width) {
 
@@ -587,6 +636,14 @@ function drawGraphic3(container_width) {
     gy.selectAll("text")
         .attr("y", -10)
         .attr("dx", -4);
+    
+    //label axis
+    var axistitle = svg.append("text")
+        .attr("class", "axistitle")
+        .attr("x", -10)
+        .attr("y", 10)
+        .attr("text-anchor", "end")
+        .text("Savings");
 
     var gx = svg.append("g")
         .attr("transform", "translate(0," + height + ")")
@@ -722,31 +779,5 @@ function drawGraphic3(container_width) {
         .attr("text-anchor", "start")
         .text("Low earners with modest savings have less hardship than high earners with low savings")
         .call(wrap2, width / 4, x(0.102));
-
-    function wrap2(text, width, startingx) {
-        text.each(function () {
-            var text = d3.select(this),
-                words = text.text().split(/\s+/).reverse(),
-                word,
-                line = [],
-                lineNumber = 0,
-                lineHeight = 1.1, // ems
-                y = text.attr("y"),
-                dy = lineHeight * 1.2
-                //dy = parseFloat(text.attr("dy")),
-            tspan = text.text(null).append("tspan").attr("x", startingx).attr("y", y).attr("dy", dy + "em");
-            while (word = words.pop()) {
-                line.push(word);
-                tspan.text(line.join(" "));
-                if (tspan.node().getComputedTextLength() > width) {
-                    line.pop();
-                    tspan.text(line.join(" "));
-                    line = [word];
-                    tspan = text.append("tspan").attr("x", startingx).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
-                }
-            }
-        });
-    }
-
 
 }
