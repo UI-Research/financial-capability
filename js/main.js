@@ -1,4 +1,5 @@
 var MOBILE_THRESHOLD = 700;
+var graphic1_data_url = "data/graphic1.csv";
 var graphic2_data_url = "data/graphic2.csv";
 var graphic3a_data_url = "data/graphic3a.csv";
 var graphic3_data_url = "data/graphic3.csv";
@@ -37,6 +38,98 @@ function wrap(text, width) {
         }
     });
 }
+
+function drawGraphic1(container_width) {
+
+    data.forEach(function (d) {
+        d.share = +d.share;
+    });
+
+    if (container_width == undefined || isNaN(container_width)) {
+        container_width = 1170;
+    }
+
+    var chart_aspect_height = 0.6;
+    var margin = {
+        top: 55,
+        right: 15,
+        bottom: 55,
+        left: 15
+    };
+
+    var width = container_width - margin.left - margin.right,
+         height = (width * chart_aspect_height) - margin.top - margin.bottom;
+
+    $graphic.empty();
+
+    var svg = d3.select("#graphic").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    var bars = svg.selectAll(".bar")
+        .data(data)
+        .enter()
+        .append("g")
+        .attr("class", "bar");
+
+
+    var barlabels = svg.selectAll(".point-label")
+        .data(data)
+        .enter()
+        .append("g")
+        .attr("class", "point-label");
+
+    var y = d3.scale.linear()
+        .range([height, 0])
+        .domain([0, d3.max(data, function (d) {
+            return d.share;
+        })]);
+
+    var x = d3.scale.ordinal()
+        .rangeRoundBands([0, width], .1)
+        .domain(data.map(function (d) {
+            return d.assets;
+        }));
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .tickSize(0)
+        .orient("bottom");
+
+    var gx = svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .attr("class", "x axis-show")
+        .call(xAxis)
+        .selectAll(".tick text")
+        .call(wrap, x.rangeBand());
+
+    bars.append("rect")
+        .attr("x", function (d) {
+            return x(d.assets);
+        })
+        .attr("width", x.rangeBand())
+        .attr("y", function (d) {
+            return y(d.share);
+        })
+        .attr("height", function (d) {
+            return height - y(d.share);
+        })
+
+    barlabels.append("text")
+        .attr("y", function (d) {
+            return y(d.share) - 8;
+        })
+        .attr("x", function (d) {
+            return x(d.assets) + x.rangeBand() / 2;
+        })
+        .attr("text-anchor", "middle")
+        .text(function (d) {
+            return d3.format("%")(d.share);
+        });
+}
+
 
 function drawGraphic2(container_width) {
 
