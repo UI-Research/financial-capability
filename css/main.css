@@ -1,5 +1,10 @@
 body {
-    font-family: Lato;
+    font-family: Lato, sans-serif !important;
+}
+
+.graphtitle {
+    font-size: 18px;
+    color: #333;
 }
 
 .fullwidth {
@@ -43,7 +48,7 @@ body {
     font-size: 12px;
 }
 
-.graphtitle {
+.subtitle {
     font-size: 14px;
 }
 
@@ -53,7 +58,7 @@ body {
 
 .annotate-shape {
     fill: none;
-    stroke: red;
+    stroke: #ec008b;
     stroke-width: 1.5px;
 }
 
@@ -71,4 +76,16 @@ body {
 
 .hardship3_0 {
     stroke: red;
+}
+
+.income1 {
+    fill: #fdbf11;
+}
+
+.income2 {
+    fill: #ccc;
+}
+
+.income3 {
+    fill: #55b748;
 }

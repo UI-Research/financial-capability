@@ -5,8 +5,7 @@ var graphic3a_data_url = "data/graphic3a.csv";
 var graphic3_data_url = "data/graphic3.csv";
 var isMobile = false;
 var $graphic = $('#graphic');
-var COLORS = ["#1696d2", "#fdbf11"];
-var COLORS3 = ["#fdbf11", "#ccc", "#1696d2"];
+var COLORS = ["#1696d2", "#ccc"];
 var numticks = 6;
 var HARDSHIPS = {
     hardship1: "Received public benefits",
@@ -58,7 +57,7 @@ function drawGraphic1(container_width) {
     };
 
     var width = container_width - margin.left - margin.right,
-         height = (width * chart_aspect_height) - margin.top - margin.bottom;
+        height = Math.ceil(width * chart_aspect_height) - margin.top - margin.bottom;
 
     $graphic.empty();
 
@@ -145,7 +144,7 @@ function drawGraphic2(container_width) {
         container_width = 1170;
     }
 
-    var chart_aspect_height = 0.4;
+    var chart_aspect_height = 0.3;
     var margin = {
         top: 55,
         right: 15,
@@ -154,7 +153,7 @@ function drawGraphic2(container_width) {
     };
 
     var width = container_width - margin.left - margin.right,
-        height = 300 - margin.top - margin.bottom;
+        height = Math.max((280 - margin.top - margin.bottom), (Math.ceil(width * chart_aspect_height) - margin.top - margin.bottom));
 
     $graphic.empty();
 
@@ -167,8 +166,7 @@ function drawGraphic2(container_width) {
     var bars = svg.selectAll(".bar")
         .data(data)
         .enter()
-        .append("g")
-        .attr("class", "bar");
+        .append("g");
 
 
     var barlabels = svg.selectAll(".point-label")
@@ -207,6 +205,7 @@ function drawGraphic2(container_width) {
             .call(wrap, x.rangeBand());
 
         bars.append("rect")
+            .attr("fill", COLORS[i])
             .attr("class", function (d) {
                 return d.hardship + "_" + i;
             })
@@ -234,7 +233,7 @@ function drawGraphic2(container_width) {
             });
 
         var titles = svg.append("text")
-            .attr("class", "graphtitle")
+            .attr("class", "subtitle")
             .attr("x", i * (30 + width / 2) + 10)
             .attr("y", -30)
             .attr("text-anchor", "start")
@@ -460,11 +459,11 @@ function drawGraphic3a(container_width) {
     gy.selectAll("text")
         .attr("dx", -4);
 
-    var titles = svg.selectAll(".graphtitle")
+    var titles = svg.selectAll(".subtitle")
         .data(LABELS)
         .enter()
         .append("g")
-        .attr("class", "graphtitle");
+        .attr("class", "subtitle");
 
     titles.append("text")
         .attr("x", function (d, i) {
@@ -520,7 +519,12 @@ function drawGraphic3a(container_width) {
 
 function drawGraphic3(container_width) {
 
-    var VALUES = ["income1", "income2", "income3"];
+    var VALUES = ["income3", "income2", "income1"];
+    var LABELS = {
+        income1: "Low income",
+        income2: "Middle income",
+        income3: "Top income"
+    };
 
     data.forEach(function (d) {
         d.income1 = +d.income1;
@@ -534,7 +538,7 @@ function drawGraphic3(container_width) {
 
     var chart_aspect_height = 0.4;
     var margin = {
-        top: 15,
+        top: 55,
         right: 80,
         bottom: 15,
         left: 100
@@ -621,19 +625,49 @@ function drawGraphic3(container_width) {
         .enter()
         .append("g")
 
+    var circleradius = 7;
+
     for (i = 0; i < VALUES.length; i++) {
         circles.append("circle")
-            .attr("r", 7)
+            .attr("class", VALUES[i])
+            .attr("r", circleradius)
             .attr("cx", function (d) {
                 return x(d[VALUES[i]]);
             })
             .attr("cy", function (d) {
                 return y(d.assets) + y.rangeBand() / 3;
-            })
-            .attr("fill", COLORS3[i])
+            });
     }
 
-    var circlelabel = svg.selectAll(".point-label")
+    var legspacing = 120;
+
+    var legend = svg.selectAll(".legend")
+        .data(VALUES)
+        .enter()
+        .append("g")
+
+    legend.append("circle")
+        .attr("class", function (d) {
+            return d;
+        })
+        .attr("r", circleradius)
+        .attr("cx", function (d, i) {
+            return i * legspacing + 10;
+        })
+        .attr("cy", -40);
+
+    legend.append("text")
+        .attr("class", "point-label")
+        .attr("x", function (d, i) {
+            return i * legspacing + 20;
+        })
+        .attr("y", -35)
+        .attr("text-anchor", "start")
+        .text(function (d, i) {
+            return LABELS[d];
+        });
+
+    /*var circlelabel = svg.selectAll(".point-label")
         .data(data)
         .enter()
         .append("g")
@@ -671,7 +705,7 @@ function drawGraphic3(container_width) {
             return y(d.assets);
         })
         .attr("text-anchor", "end")
-        .text("Top income");
+        .text("Top income");*/
 
     //annotate: main point is that low income with assets have less hardship than high income without assets
     var annotateshape = svg.append("rect")
