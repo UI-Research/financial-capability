@@ -767,9 +767,9 @@ function drawGraphic3(container_width) {
     //annotate: main point is that low income with assets have less hardship than high income without assets
     var annotateshape = svg.append("rect")
         .attr("class", "annotate-shape")
-        .attr("x", x(0.20))
+        .attr("x", x(0.192))
         .attr("y", 2.5 * y.rangeBand())
-        .attr("width", x(0.23) - x(0.20))
+        .attr("width", x(0.22) - x(0.192))
         .attr("height", 3.5 * y.rangeBand());
 
     var annotation = svg.append("text")
@@ -778,6 +778,6 @@ function drawGraphic3(container_width) {
         .attr("y", 3.6 * y.rangeBand())
         .attr("text-anchor", "start")
         .text("Low earners with modest savings have less hardship than high earners with low savings")
-        .call(wrap2, width / 4, x(0.102));
+        .call(wrap2, width * 0.24, x(0.102));
 
 }
