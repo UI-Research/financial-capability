@@ -7,6 +7,10 @@ body {
     color: #333;
 }
 
+.subtitle {
+    font-size: 15px;
+}
+
 .fullwidth {
     width: 100%;
 }
@@ -46,10 +50,6 @@ body {
 
 .point-label {
     font-size: 12px;
-}
-
-.subtitle {
-    font-size: 14px;
 }
 
 .bar {

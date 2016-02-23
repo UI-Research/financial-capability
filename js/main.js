@@ -769,15 +769,15 @@ function drawGraphic3(container_width) {
         .attr("class", "annotate-shape")
         .attr("x", x(0.192))
         .attr("y", 2.5 * y.rangeBand())
-        .attr("width", x(0.22) - x(0.192))
-        .attr("height", 3.5 * y.rangeBand());
+        .attr("width", x(0.305) - x(0.192))
+        .attr("height", 3.6 * y.rangeBand());
 
     var annotation = svg.append("text")
         .attr("class", "annotation")
         //.attr("x", x(0.10))
-        .attr("y", 3.6 * y.rangeBand())
+        .attr("y", 1.1 * y.rangeBand())
         .attr("text-anchor", "start")
-        .text("Low earners with modest savings have less hardship than high earners with low savings")
-        .call(wrap2, width * 0.24, x(0.102));
+        .text("Low earners with modest savings have less hardship than higher earners with low savings")
+        .call(wrap2, width * 0.4, x(0.19));
 
 }
