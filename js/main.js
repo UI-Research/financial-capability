@@ -5,7 +5,7 @@ var graphic3a_data_url = "data/graphic3a.csv";
 var graphic3_data_url = "data/graphic3.csv";
 var isMobile = false;
 var $graphic = $('#graphic');
-var COLORS = ["#1696d2", "#ccc"];
+var COLORS = ["#1696d2", "#d2d2d2"];
 var numticks = 6;
 var HARDSHIPS = {
     hardship1: "Received public benefits",
@@ -158,18 +158,18 @@ function drawGraphic1(container_width) {
         .attr("y", y(0.2))
         .attr("text-anchor", "start")
         .text("Over half of families have less than $2,000 in savings")
-        .call(wrap2, 0.35*width, width/6);
-    
+        .call(wrap2, 0.35 * width, width / 6);
+
     var annotation2 = svg.append("text")
         .attr("class", "annotation")
         .attr("y", -60)
         .attr("text-anchor", "start")
         .text("1 in 4 families has $20,000 or more in savings")
-        .call(wrap2, 0.24*width, 0.8*width);
+        .call(wrap2, 0.24 * width, 0.8 * width);
 }
 
 
-function drawGraphic2(container_width) {
+/*function drawGraphic2(container_width) {
 
     var LABELS = ["Families who experienced financial shocks", "Families without financial shocks"];
     var VALUES = ["shocks1", "shocks0"]
@@ -278,44 +278,177 @@ function drawGraphic2(container_width) {
             .attr("text-anchor", "start")
             .text(LABELS[i]);
     }
-}
+}*/
 
-/*function drawGraphic2(container_width) {
+
+/*function drawGraphic2_horizontal(container_width) {
+
+    var LABELS = ["Families who experienced financial shocks", "Families without financial shocks"];
+    var VALUES = ["shocks1", "shocks0"]
 
     data.forEach(function (d) {
         d.shocks1 = +d.shocks1;
         d.shocks0 = +d.shocks0;
     });
 
+
+    var color = d3.scale.ordinal()
+        .range(COLORS);
+
     if (container_width == undefined || isNaN(container_width)) {
         container_width = 1170;
     }
 
-    var chart_aspect_height = 0.4;
+    var chart_aspect_height = 0.3;
     var margin = {
-        top: 15,
-        right: 80,
-        bottom: 15,
-        left: 150
+        top: 55,
+        right: 15,
+        bottom: 45,
+        left: 15
     };
-    var padding = 20;
 
     var width = container_width - margin.left - margin.right,
-        height = 300 - margin.top - margin.bottom - padding;
+        height = Math.max((280 - margin.top - margin.bottom), (Math.ceil(width * chart_aspect_height) - margin.top - margin.bottom));
 
     $graphic.empty();
 
     var svg = d3.select("#graphic").append("svg")
         .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom + padding)
+        .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    var y = d3.scale.ordinal()
-        .rangeRoundBands([height, 0 + padding], .1)
-        .domain(data.map(function (d) {
-            return d.hardship;
-        }));
+    var x0 = d3.scale.ordinal()
+        .rangeRoundBands([0, width], .1);
+
+    var x1 = d3.scale.ordinal();
+
+    var y = d3.scale.linear()
+        .range([height, 0])
+        .domain([0, d3.max(data, function (d) {
+            return d.shocks1;
+        })]);
+
+    data.forEach(function (d) {
+        d.vals = VALUES.map(function (name) {
+            return {
+                name: name,
+                value: +d[name]
+            };
+        });
+    });
+
+    x0.domain(data.map(function (d) {
+        return d.hardship;
+    }));
+
+    x1.domain(VALUES).rangeRoundBands([0, x0.rangeBand()]);
+
+    y.domain([0, d3.max(data, function (d) {
+        return d3.max(d.vals, function (d) {
+            return d.value;
+        });
+    })]);
+
+    var xAxis = d3.svg.axis()
+        .scale(x0)
+        .tickSize(0)
+        .tickFormat(function (d) {
+            return HARDSHIPS[d];
+        })
+        .orient("bottom");
+
+    var gx = svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .attr("class", "x axis-show")
+        .call(xAxis);
+
+    var bars = svg.selectAll(".bar")
+        .data(data)
+        .enter().append("g")
+        .attr("class", "group")
+        .attr("transform", function (d) {
+            return "translate(" + x0(d.hardship) + ",0)";
+        });
+
+    bars.selectAll("rect")
+        .data(function (d) {
+            return d.vals;
+        })
+        .enter().append("rect")
+        .attr("width", x1.rangeBand())
+        .attr("x", function (d) {
+            return x1(d.name);
+        })
+        .attr("y", function (d) {
+            return y(d.value);
+        })
+        .attr("height", function (d) {
+            return height - y(d.value);
+        })
+        .style("fill", function (d) {
+            return color(d.name);
+        });
+
+    bars.selectAll("text")
+        .data(function (d) {
+            return d.vals;
+        })
+        .enter().append("text")
+        .attr("class", "point-label")
+        .attr("x", function (d) {
+            return x1(d.name) + x1.rangeBand() / 2;
+        })
+        .attr("y", function (d) {
+            return y(d.value) - 6;
+        })
+        .attr("text-anchor", "middle")
+        .text(function (d) {
+            return d3.format("%")(d.value);
+        });
+}*/
+
+function drawGraphic2(container_width) {
+
+    var LABELS = ["Families who experienced financial shocks", "Families without financial shocks"];
+    var VALUES = ["shocks1", "shocks0"]
+
+    data.forEach(function (d) {
+        d.shocks1 = +d.shocks1;
+        d.shocks0 = +d.shocks0;
+    });
+
+
+    var color = d3.scale.ordinal()
+        .range(COLORS);
+
+    if (container_width == undefined || isNaN(container_width)) {
+        container_width = 1170;
+    }
+
+    var chart_aspect_height = 1;
+    var margin = {
+        top: 70,
+        right: 40,
+        bottom: 45,
+        left: 100
+    };
+
+    var width = container_width - margin.left - margin.right,
+        height = Math.max((400 - margin.top - margin.bottom), (Math.ceil(width * chart_aspect_height) - margin.top - margin.bottom));
+
+    $graphic.empty();
+
+    var svg = d3.select("#graphic").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    var y0 = d3.scale.ordinal()
+        .rangeRoundBands([height, 0], .18);
+
+    var y1 = d3.scale.ordinal();
 
     var x = d3.scale.linear()
         .range([0, width])
@@ -323,112 +456,114 @@ function drawGraphic2(container_width) {
             return d.shocks1;
         })]);
 
+    data.forEach(function (d) {
+        d.vals = VALUES.map(function (name) {
+            return {
+                name: name,
+                value: +d[name]
+            };
+        });
+    });
+
+    y0.domain(data.map(function (d) {
+        return d.hardship;
+    }));
+
+    y1.domain(VALUES).rangeRoundBands([0, y0.rangeBand()]);
+
+    x.domain([0, d3.max(data, function (d) {
+        return d3.max(d.vals, function (d) {
+            return d.value;
+        });
+    })]);
+
     var yAxis = d3.svg.axis()
-        .scale(y)
+        .scale(y0)
         .tickSize(0)
+        .tickFormat(function (d) {
+            return HARDSHIPS[d];
+        })
         .orient("left");
 
-    var xAxis = d3.svg.axis()
-        .scale(x)
-        .tickSize(height)
-        .tickFormat(d3.format("%"))
-        .ticks(5)
-        .orient("top");
-
     var gy = svg.append("g")
-        .attr("class", "y axis")
-        .call(yAxis);
-
-    gy.selectAll("text")
-        .attr("y", -10)
-        .attr("dx", -4);
-
-    var gx = svg.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .attr("class", "x axis")
-        .call(xAxis);
-
-    gx.selectAll("g").filter(function (d) {
-            return d;
+        .attr("class", "y axis-show")
+        .call(yAxis)
+        .selectAll(".tick text")
+        .attr("transform", function (d) {
+            return "translate(0," +  -0.25*y0.rangeBand() + ")";
         })
-        .classed("minor", true);
+        .call(wrap2, 90, -5);
 
-    var lines = svg.selectAll(".line")
+
+    var bars = svg.selectAll(".bar")
         .data(data)
-        .enter()
-        .append("g");
-
-    lines.append("line")
-        .attr("class", "chartline")
-        .attr("y1", function (d) {
-            return y(d.hardship) + y.rangeBand() / 3;
-        })
-        .attr("y2", function (d) {
-            return y(d.hardship) + y.rangeBand() / 3;
-        })
-        .attr("x1", function (d) {
-            return x(d.shocks0);
-        })
-        .attr("x2", function (d) {
-            return x(d.shocks1);
+        .enter().append("g")
+        .attr("class", "group")
+        .attr("transform", function (d) {
+            return "translate(0," + y0(d.hardship) + ")";
         });
 
-    var circles = svg.selectAll(".dot")
-        .data(data)
-        .enter()
-        .append("g")
+    bars.selectAll("rect")
+        .data(function (d) {
+            return d.vals;
+        })
+        .enter().append("rect")
+        .attr("height", y1.rangeBand())
+        .attr("y", function (d) {
+            return y1(d.name);
+        })
+        .attr("x", x(0))
+        .attr("width", function (d) {
+            return x(d.value);
+        })
+        .attr("fill", function (d) {
+            return color(d.name);
+        });
 
-    circles.append("circle")
-        .attr("r", 5.5)
-        .attr("cx", function (d) {
-            return x(d.shocks0);
+    bars.selectAll("text")
+        .data(function (d) {
+            return d.vals;
         })
-        .attr("cy", function (d) {
-            return y(d.hardship) + y.rangeBand() / 3;
-        })
-        .attr("fill", COLORS[0])
-
-    circles.append("circle")
-        .attr("r", 5.5)
-        .attr("cx", function (d) {
-            return x(d.shocks1);
-        })
-        .attr("cy", function (d) {
-            return y(d.hardship) + y.rangeBand() / 3;
-        })
-        .attr("fill", COLORS[1])
-
-    var circlelabel = svg.selectAll(".point-label")
-        .data(data)
-        .enter()
-        .append("g")
+        .enter().append("text")
         .attr("class", "point-label")
-        .filter(function (d) {
-            return d.hardship == "Received public benefits"
-        })
-
-    //label top circles
-    circlelabel.append("text")
-        .attr("x", function (d) {
-            return x(d.shocks0);
-        })
         .attr("y", function (d) {
-            return y(d.hardship);
+            return y1(d.name) + y1.rangeBand() / 2;
         })
-        .attr("text-anchor", "middle")
-        .text("No financial shocks");
-
-    circlelabel.append("text")
         .attr("x", function (d) {
-            return x(d.shocks1);
+            return x(d.value) + 6;
         })
-        .attr("y", function (d) {
-            return y(d.hardship);
-        })
-        .attr("text-anchor", "middle")
-        .text("Had a financial shock");
+        .attr("text-anchor", "start")
+        .text(function (d) {
+            return d3.format("%")(d.value);
+        });
 
-}*/
+    var legspacing = 25;
+
+    var legend = svg.selectAll(".legend")
+        .data(VALUES)
+        .enter()
+        .append("g")
+
+    legend.append("rect")
+        .attr("fill", color)
+        .attr("width", 20)
+        .attr("height", 20)
+        .attr("y", function (d, i) {
+            return i * legspacing - 60;
+        })
+        .attr("x", 0);
+
+    legend.append("text")
+        .attr("class", "point-label")
+        .attr("y", function (d, i) {
+            return i * legspacing - 46;
+        })
+        .attr("x", 30)
+        .attr("text-anchor", "start")
+        .text(function (d, i) {
+            return LABELS[i];
+        });
+}
 
 function drawGraphic3a(container_width) {
 
@@ -497,7 +632,7 @@ function drawGraphic3a(container_width) {
 
     gy.selectAll("text")
         .attr("dx", -4);
-    
+
     //label axis
     var axistitle = svg.append("text")
         .attr("class", "axistitle")
@@ -617,6 +752,14 @@ function drawGraphic3(container_width) {
             return d.income1;
         })]);
 
+    //annotate: main point is that low income with assets have less hardship than high income without assets
+    var annotateshape = svg.append("rect")
+        .attr("class", "annotate-shape")
+        .attr("x", x(0.192))
+        .attr("y", 2.5 * y.rangeBand())
+        .attr("width", x(0.305) - x(0.192))
+        .attr("height", 3.6 * y.rangeBand());
+
     var yAxis = d3.svg.axis()
         .scale(y)
         .tickSize(0)
@@ -636,7 +779,7 @@ function drawGraphic3(container_width) {
     gy.selectAll("text")
         .attr("y", -10)
         .attr("dx", -4);
-    
+
     //label axis
     var axistitle = svg.append("text")
         .attr("class", "axistitle")
@@ -764,13 +907,7 @@ function drawGraphic3(container_width) {
         .attr("text-anchor", "end")
         .text("Top income");*/
 
-    //annotate: main point is that low income with assets have less hardship than high income without assets
-    var annotateshape = svg.append("rect")
-        .attr("class", "annotate-shape")
-        .attr("x", x(0.192))
-        .attr("y", 2.5 * y.rangeBand())
-        .attr("width", x(0.305) - x(0.192))
-        .attr("height", 3.6 * y.rangeBand());
+
 
     var annotation = svg.append("text")
         .attr("class", "annotation")

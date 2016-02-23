@@ -45,7 +45,8 @@ body {
 .chartline {
     fill: none;
     stroke-width: 1px;
-    stroke: #000;
+    stroke: #333333;
+    shape-rendering: crispEdges;
 }
 
 .point-label {
@@ -57,9 +58,7 @@ body {
 }
 
 .annotate-shape {
-    fill: none;
-    stroke: #ec008b;
-    stroke-width: 1.5px;
+    fill: #ebebeb;
 }
 
 .annotation {
@@ -71,7 +70,7 @@ body {
     font-style: italic;
 }
 
-.hardship1_0 {
+/*.hardship1_0 {
     stroke: black;
 }
 
@@ -81,16 +80,18 @@ body {
 
 .hardship3_0 {
     stroke: red;
-}
+}*/
 
 .income1 {
-    fill: #fdbf11;
+    /*fill: #ec008b;*/
+    fill: #000;
 }
 
 .income2 {
-    fill: #ccc;
+   fill: #fdbf11;
 }
 
 .income3 {
-    fill: #55b748;
+    /*fill: #55b748;*/
+    fill: #1696d2;
 }
