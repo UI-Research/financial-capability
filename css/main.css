@@ -65,6 +65,13 @@ body {
     font-size: 13px;
 }
 
+.annotate-line {
+    fill: none;
+    stroke-width: 1.5px;
+    stroke: #ccc;
+    shape-rendering: crispEdges;
+}
+
 .axistitle {
     font-size: 13px;
     font-style: italic;

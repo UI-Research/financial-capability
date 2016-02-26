@@ -92,19 +92,6 @@ function drawGraphic1(container_width) {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    var bars = svg.selectAll(".bar")
-        .data(data)
-        .enter()
-        .append("g")
-        .attr("class", "bar");
-
-
-    var barlabels = svg.selectAll(".point-label")
-        .data(data)
-        .enter()
-        .append("g")
-        .attr("class", "point-label");
-
     var y = d3.scale.linear()
         .range([height, 0])
         .domain([0, d3.max(data, function (d) {
@@ -128,6 +115,12 @@ function drawGraphic1(container_width) {
         .call(xAxis)
         .selectAll(".tick text")
         .call(wrap, x.rangeBand());
+    
+    var bars = svg.selectAll(".bar")
+        .data(data)
+        .enter()
+        .append("g")
+        .attr("class", "bar");
 
     bars.append("rect")
         .attr("x", function (d) {
@@ -140,6 +133,12 @@ function drawGraphic1(container_width) {
         .attr("height", function (d) {
             return height - y(d.share);
         })
+
+    var barlabels = svg.selectAll(".point-label")
+        .data(data)
+        .enter()
+        .append("g")
+        .attr("class", "point-label");
 
     barlabels.append("text")
         .attr("y", function (d) {
@@ -155,17 +154,31 @@ function drawGraphic1(container_width) {
 
     var annotation = svg.append("text")
         .attr("class", "annotation")
-        .attr("y", y(0.2))
-        .attr("text-anchor", "start")
-        .text("Over half of families have less than $2,000 in savings")
-        .call(wrap2, 0.35 * width, width / 6);
+        .attr("y", -70)
+        .attr("text-anchor", "middle")
+        .text("62% of families are asset poor")
+        .call(wrap2, width / 3, 3 * x.rangeBand());
 
-    var annotation2 = svg.append("text")
-        .attr("class", "annotation")
-        .attr("y", -60)
-        .attr("text-anchor", "start")
-        .text("1 in 4 families has $20,000 or more in savings")
-        .call(wrap2, 0.24 * width, 0.8 * width);
+    svg.append("line")
+        .attr("class", "annotate-line")
+        .attr("x1", x("$0"))
+        .attr("x2", x("$2,000 - $4,999") + x.rangeBand())
+        .attr("y1", -50)
+        .attr("y2", -50);
+    
+    svg.append("line")
+        .attr("class", "annotate-line")
+        .attr("x1", x("$0"))
+        .attr("x2", x("$0"))
+        .attr("y1", -20)
+        .attr("y2", -50);
+    
+    svg.append("line")
+        .attr("class", "annotate-line")
+        .attr("x1", x("$2,000 - $4,999") + x.rangeBand())
+        .attr("x2", x("$2,000 - $4,999") + x.rangeBand())
+        .attr("y1", -20)
+        .attr("y2", -50);
 }
 
 
@@ -490,7 +503,7 @@ function drawGraphic2(container_width) {
         .call(yAxis)
         .selectAll(".tick text")
         .attr("transform", function (d) {
-            return "translate(0," +  -0.25*y0.rangeBand() + ")";
+            return "translate(0," + -0.25 * y0.rangeBand() + ")";
         })
         .call(wrap2, 90, -5);
 
@@ -583,7 +596,7 @@ function drawGraphic3a(container_width) {
     var chart_aspect_height = 0.4;
     var margin = {
         top: 35,
-        right: 40,
+        right: 45,
         bottom: 15,
         left: 100
     };
