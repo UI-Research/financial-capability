@@ -927,7 +927,7 @@ function drawGraphic3(container_width) {
         //.attr("x", x(0.10))
         .attr("y", 1.1 * y.rangeBand())
         .attr("text-anchor", "start")
-        .text("Low earners with modest savings have less hardship than higher earners with low savings")
+        .text("Low earners with modest savings have lower hardship rates than higher earners with low savings")
         .call(wrap2, width * 0.4, x(0.19));
 
 }
