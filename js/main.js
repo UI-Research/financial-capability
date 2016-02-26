@@ -163,22 +163,22 @@ function drawGraphic1(container_width) {
         .attr("class", "annotate-line")
         .attr("x1", x("$0"))
         .attr("x2", x("$2,000 - $4,999") + x.rangeBand())
-        .attr("y1", -50)
-        .attr("y2", -50);
+        .attr("y1", -47)
+        .attr("y2", -47);
     
     svg.append("line")
         .attr("class", "annotate-line")
         .attr("x1", x("$0"))
         .attr("x2", x("$0"))
         .attr("y1", -20)
-        .attr("y2", -50);
+        .attr("y2", -47);
     
     svg.append("line")
         .attr("class", "annotate-line")
         .attr("x1", x("$2,000 - $4,999") + x.rangeBand())
         .attr("x2", x("$2,000 - $4,999") + x.rangeBand())
         .attr("y1", -20)
-        .attr("y2", -50);
+        .attr("y2", -47);
 }
 
 
