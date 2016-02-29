@@ -541,7 +541,7 @@ function drawGraphic2(container_width) {
         .enter().append("text")
         .attr("class", "point-label")
         .attr("y", function (d) {
-            return y1(d.name) + y1.rangeBand() / 2;
+            return y1(d.name) + y1.rangeBand() / 2 + 4;
         })
         .attr("x", function (d) {
             return x(d.value) + 6;
@@ -704,7 +704,7 @@ function drawGraphic3a(container_width) {
                 return x(d[VALUES[i]]) + 4;
             })
             .attr("y", function (d) {
-                return y(d.assets) + y.rangeBand() / 2;
+                return y(d.assets) + y.rangeBand() / 2 + 4;
             })
             .text(function (d) {
                 return d3.format("%")(d[VALUES[i]]);
