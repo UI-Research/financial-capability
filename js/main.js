@@ -14,6 +14,7 @@ var HARDSHIPS = {
     hardship4: "Evicted"
 };
 
+
 function wrap(text, width) {
     text.each(function () {
         var text = d3.select(this),
@@ -115,7 +116,7 @@ function drawGraphic1(container_width) {
         .call(xAxis)
         .selectAll(".tick text")
         .call(wrap, x.rangeBand());
-    
+
     var bars = svg.selectAll(".bar")
         .data(data)
         .enter()
@@ -165,14 +166,14 @@ function drawGraphic1(container_width) {
         .attr("x2", x("$2,000 - $4,999") + x.rangeBand())
         .attr("y1", -47)
         .attr("y2", -47);
-    
+
     svg.append("line")
         .attr("class", "annotate-line")
         .attr("x1", x("$0"))
         .attr("x2", x("$0"))
         .attr("y1", -20)
         .attr("y2", -47);
-    
+
     svg.append("line")
         .attr("class", "annotate-line")
         .attr("x1", x("$2,000 - $4,999") + x.rangeBand())
@@ -722,11 +723,13 @@ function drawGraphic3(container_width) {
         income2: "Middle income",
         income3: "High income"
     };
-    var ASSETGROUPS = {"$0": "a1", 
-                       "$1-$2,000": "a2", 
-                       "$2,000-$4,999": "a3", 
-                       "$5,000-$19,999": "a4", 
-                       "$20,000+": "a5"};
+    var ASSETGROUPS = {
+        "$0": "a1",
+        "$1-$2,000": "a2",
+        "$2,000-$4,999": "a3",
+        "$5,000-$19,999": "a4",
+        "$20,000+": "a5"
+    };
 
     data.forEach(function (d) {
         d.income1 = +d.income1;
@@ -805,7 +808,7 @@ function drawGraphic3(container_width) {
         .attr("y", 10)
         .attr("text-anchor", "end")
         .text("Savings");
-    
+
     var axistitlex = svg.append("text")
         .attr("class", "axistitle")
         .attr("x", x(0.15))
@@ -864,6 +867,21 @@ function drawGraphic3(container_width) {
             })
             .attr("cy", function (d) {
                 return y(d.assets) + y.rangeBand() / 3;
+            })
+            .on("mouseover", function (d) {
+                //make all the other circles and lines less visible
+                d3.selectAll("circle:not(." + d3.select(this).attr("class") + ")")
+                    .classed("lowlight", true);
+                d3.selectAll(".chartline")
+                    .classed("lowlight", true);
+            })
+            .on("mouseout", function (d) {
+                d3.selectAll(".lowlight")
+                    .classed("lowlight", false);
+            })
+            .on("mouseleave", function (d) {
+                d3.selectAll(".lowlight")
+                    .classed("lowlight", false);
             });
     }
 
@@ -882,7 +900,21 @@ function drawGraphic3(container_width) {
         .attr("cx", function (d, i) {
             return i * legspacing + 10;
         })
-        .attr("cy", -50);
+        .attr("cy", -50)
+        .on("mouseover", function (d) {
+            d3.selectAll("circle:not(." + d + ")")
+                .classed("lowlight", true);
+            d3.selectAll(".chartline")
+                .classed("lowlight", true);
+        })
+        .on("mouseout", function (d) {
+            d3.selectAll(".lowlight")
+                .classed("lowlight", false);
+        })
+        .on("mouseleave", function (d) {
+            d3.selectAll(".lowlight")
+                .classed("lowlight", false);
+        });
 
     legend.append("text")
         .attr("class", "legend")

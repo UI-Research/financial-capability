@@ -95,11 +95,6 @@ body {
     fill: #1696d2;
 }
 
-/*#income1_a3,
-#income3_a1,
-#income3_a2,
-#income2_a2,
-#income2_a1 {
-    stroke: #ec008b;
-    stroke-width: 2px;
-}*/
+.lowlight {
+    opacity: 0.2;
+}
