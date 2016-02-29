@@ -53,6 +53,10 @@ body {
     font-size: 12px;
 }
 
+.legend {
+    font-size: 13px;
+}
+
 .bar {
     fill: #1696d2;
 }
@@ -77,18 +81,6 @@ body {
     font-style: italic;
 }
 
-/*.hardship1_0 {
-    stroke: black;
-}
-
-.hardship2_0 {
-    stroke: purple;
-}
-
-.hardship3_0 {
-    stroke: red;
-}*/
-
 .income1 {
     /*fill: #ec008b;*/
     fill: #000;
@@ -102,3 +94,12 @@ body {
     /*fill: #55b748;*/
     fill: #1696d2;
 }
+
+/*#income1_a3,
+#income3_a1,
+#income3_a2,
+#income2_a2,
+#income2_a1 {
+    stroke: #ec008b;
+    stroke-width: 2px;
+}*/

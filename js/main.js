@@ -423,7 +423,7 @@ function drawGraphic1(container_width) {
 
 function drawGraphic2(container_width) {
 
-    var LABELS = ["Families who experienced financial shocks", "Families without financial shocks"];
+    var LABELS = ["Families who experienced income disruptions", "Families without income disruptions"];
     var VALUES = ["shocks1", "shocks0"]
 
     data.forEach(function (d) {
@@ -567,7 +567,7 @@ function drawGraphic2(container_width) {
         .attr("x", 0);
 
     legend.append("text")
-        .attr("class", "point-label")
+        .attr("class", "legend")
         .attr("y", function (d, i) {
             return i * legspacing - 46;
         })
@@ -627,10 +627,10 @@ function drawGraphic3a(container_width) {
     }
     var prop = [];
     for (i = 0; i < VALUES.length; i++) {
-        prop[i] = 0.8 * max[i] / (max[0] + max[1] + max[2]);
+        prop[i] = 0.75 * max[i] / (max[0] + max[1] + max[2]);
     }
 
-    var padding = 60;
+    var padding = 65;
 
     var STARTS = [0, width * prop[0], width * (prop[0] + prop[1]), width * (prop[0] + prop[1] + prop[2])];
 
@@ -720,8 +720,13 @@ function drawGraphic3(container_width) {
     var LABELS = {
         income1: "Low income",
         income2: "Middle income",
-        income3: "Top income"
+        income3: "High income"
     };
+    var ASSETGROUPS = {"$0": "a1", 
+                       "$1-$2,000": "a2", 
+                       "$2,000-$4,999": "a3", 
+                       "$5,000-$19,999": "a4", 
+                       "$20,000+": "a5"};
 
     data.forEach(function (d) {
         d.income1 = +d.income1;
@@ -735,7 +740,7 @@ function drawGraphic3(container_width) {
 
     var chart_aspect_height = 0.4;
     var margin = {
-        top: 55,
+        top: 65,
         right: 80,
         bottom: 15,
         left: 100
@@ -794,12 +799,19 @@ function drawGraphic3(container_width) {
         .attr("dx", -4);
 
     //label axis
-    var axistitle = svg.append("text")
+    var axistitley = svg.append("text")
         .attr("class", "axistitle")
         .attr("x", -10)
         .attr("y", 10)
         .attr("text-anchor", "end")
         .text("Savings");
+    
+    var axistitlex = svg.append("text")
+        .attr("class", "axistitle")
+        .attr("x", x(0.15))
+        .attr("y", -15)
+        .attr("text-anchor", "middle")
+        .text("Share experiencing hardship");
 
     var gx = svg.append("g")
         .attr("transform", "translate(0," + height + ")")
@@ -843,6 +855,9 @@ function drawGraphic3(container_width) {
     for (i = 0; i < VALUES.length; i++) {
         circles.append("circle")
             .attr("class", VALUES[i])
+            .attr("id", function (d) {
+                return VALUES[i] + "_" + ASSETGROUPS[d.assets];
+            })
             .attr("r", circleradius)
             .attr("cx", function (d) {
                 return x(d[VALUES[i]]);
@@ -852,7 +867,7 @@ function drawGraphic3(container_width) {
             });
     }
 
-    var legspacing = 120;
+    var legspacing = 130;
 
     var legend = svg.selectAll(".legend")
         .data(VALUES)
@@ -867,67 +882,25 @@ function drawGraphic3(container_width) {
         .attr("cx", function (d, i) {
             return i * legspacing + 10;
         })
-        .attr("cy", -40);
+        .attr("cy", -50);
 
     legend.append("text")
-        .attr("class", "point-label")
+        .attr("class", "legend")
         .attr("x", function (d, i) {
             return i * legspacing + 20;
         })
-        .attr("y", -35)
+        .attr("y", -45)
         .attr("text-anchor", "start")
         .text(function (d, i) {
             return LABELS[d];
         });
-
-    /*var circlelabel = svg.selectAll(".point-label")
-        .data(data)
-        .enter()
-        .append("g")
-        .attr("class", "point-label")
-        .filter(function (d) {
-            return d.assets == "$20,000+"
-        })
-
-    //label top circles
-    circlelabel.append("text")
-        .attr("x", function (d) {
-            return x(d.income1);
-        })
-        .attr("y", function (d) {
-            return y(d.assets);
-        })
-        .attr("text-anchor", "middle")
-        .text("Low income");
-
-    circlelabel.append("text")
-        .attr("x", function (d) {
-            return x(d.income2);
-        })
-        .attr("y", function (d) {
-            return y(d.assets);
-        })
-        .attr("text-anchor", "start")
-        .text("Middle income");
-
-    circlelabel.append("text")
-        .attr("x", function (d) {
-            return x(d.income3);
-        })
-        .attr("y", function (d) {
-            return y(d.assets);
-        })
-        .attr("text-anchor", "end")
-        .text("Top income");*/
-
-
 
     var annotation = svg.append("text")
         .attr("class", "annotation")
         //.attr("x", x(0.10))
         .attr("y", 0.9 * y.rangeBand())
         .attr("text-anchor", "start")
-        .text("Low earners with modest savings have lower hardship rates than higher earners with low savings")
+        .text("Being low income with modest savings is better than being higher income and living paycheck to paycheck")
         .call(wrap2, width * 0.4, x(0.19));
 
 }
