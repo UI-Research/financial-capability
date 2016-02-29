@@ -627,10 +627,10 @@ function drawGraphic3a(container_width) {
     }
     var prop = [];
     for (i = 0; i < VALUES.length; i++) {
-        prop[i] = 0.9 * max[i] / (max[0] + max[1] + max[2]);
+        prop[i] = 0.8 * max[i] / (max[0] + max[1] + max[2]);
     }
 
-    var padding = 40;
+    var padding = 60;
 
     var STARTS = [0, width * prop[0], width * (prop[0] + prop[1]), width * (prop[0] + prop[1] + prop[2])];
 
@@ -925,7 +925,7 @@ function drawGraphic3(container_width) {
     var annotation = svg.append("text")
         .attr("class", "annotation")
         //.attr("x", x(0.10))
-        .attr("y", 1.1 * y.rangeBand())
+        .attr("y", 0.9 * y.rangeBand())
         .attr("text-anchor", "start")
         .text("Low earners with modest savings have lower hardship rates than higher earners with low savings")
         .call(wrap2, width * 0.4, x(0.19));
