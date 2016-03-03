@@ -21,10 +21,6 @@ var graphtext = {
     graph5: "Lorem ipsum 5 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
 }
 
-var graph = "graph";
-var step = 1;
-buttonStyle(1);
-
 function buttonStyle(step) {
 
     d3.selectAll(".button.num").classed("greyed", true);
@@ -43,19 +39,45 @@ function buttonStyle(step) {
 
 }
 
-//on changing the step, change the graph
-function graphChange() {
-    step = step < 5 ? step + 1 : step;
-    buttonStyle(step);
-    window[graph + step]();
-}
-
-$('#btnnext').click(function () {
-    graphChange();
-});
+var graph = "graph";
+var step = 1;
+buttonStyle(1);
 
 function drawGraphic3(container_width) {
+    $('#btnnext').click(function () {
+        graphChange("next");
+    });
 
+    $('#btnprev').click(function () {
+        graphChange("prev");
+    });
+
+    //on changing the step, change the graph
+    function graphChange(direction) {
+        if (direction == "next") {
+            step = step < 5 ? step + 1 : step;
+        } else if (direction == "prev") {
+            step = step > 1 ? step - 1 : step;
+        }
+        buttonStyle(step);
+        switch (step) {
+        case 1:
+            graph1();
+            break;
+        case 2:
+            graph2();
+            break;
+        case 3:
+            graph3();
+            break;
+        case 4:
+            graph4();
+            break;
+        case 5:
+            graph5();
+            break;
+        }
+    }
 
     data.forEach(function (d) {
         d.income1 = +d.income1;
@@ -223,24 +245,28 @@ function drawGraphic3(container_width) {
                 return y(d.assets);
             })
             .attr("height", y.rangeBand())
+            .attr("r", 0);
     }
 
     function graph2() {
         d3.select("#graphtext")
             .html(graphtext.graph2);
 
-        bars.append("rect")
-            .attr("class", "income2")
-            .attr("x", x(0))
-            .attr("width", function (d) {
-                return Math.abs(x(0) - x(d.income2));
+        d3.selectAll("rect.income1")
+            .transition()
+            .duration(800)
+            .attr("x", function (d) {
+                return x(d.income1) - circleradius;
             })
-            .attr("y", function (d) {
-                return y(d.assets);
-            })
-            .attr("height", y.rangeBand())
+            .attr("width", 2 * circleradius)
+            .transition()
+            .duration(600)
+            .remove();
 
         circles.append("circle")
+            .transition()
+            .delay(1400)
+            .duration(200)
             .attr("class", VALUES[2])
             .attr("id", function (d) {
                 return VALUES[2] + "_" + ASSETGROUPS[d.assets];
@@ -251,22 +277,35 @@ function drawGraphic3(container_width) {
             })
             .attr("cy", function (d) {
                 return y(d.assets) + y.rangeBand() / 3;
-            })
-            .on("mouseover", function (d) {
-                //make all the other circles and lines less visible
-                d3.selectAll("circle:not(." + d3.select(this).attr("class") + ")")
-                    .classed("lowlight", true);
-                d3.selectAll(".chartline")
-                    .classed("lowlight", true);
-            })
-            .on("mouseout", function (d) {
-                d3.selectAll(".lowlight")
-                    .classed("lowlight", false);
-            })
-            .on("mouseleave", function (d) {
-                d3.selectAll(".lowlight")
-                    .classed("lowlight", false);
             });
+        /*.on("mouseover", function (d) {
+            //make all the other circles and lines less visible
+            d3.selectAll("circle:not(." + d3.select(this).attr("class") + ")")
+                .classed("lowlight", true);
+            d3.selectAll(".chartline")
+                .classed("lowlight", true);
+        })
+        .on("mouseout", function (d) {
+            d3.selectAll(".lowlight")
+                .classed("lowlight", false);
+        })
+        .on("mouseleave", function (d) {
+            d3.selectAll(".lowlight")
+                .classed("lowlight", false);
+        });*/
+
+        bars.append("rect")
+            .transition()
+            .delay(1500)
+            .attr("class", "income2")
+            .attr("x", x(0))
+            .attr("width", function (d) {
+                return Math.abs(x(0) - x(d.income2));
+            })
+            .attr("y", function (d) {
+                return y(d.assets);
+            })
+            .attr("height", y.rangeBand())
 
     }
 
@@ -274,7 +313,36 @@ function drawGraphic3(container_width) {
         d3.select("#graphtext")
             .html(graphtext.graph3);
 
+        d3.selectAll("rect.income2")
+            .transition()
+            .duration(800)
+            .attr("x", function (d) {
+                return x(d.income2) - circleradius;
+            })
+            .attr("width", 2 * circleradius)
+            .transition()
+            .duration(600)
+            .remove();
+
+        circles.append("circle")
+            .transition()
+            .delay(1400)
+            .duration(200)
+            .attr("class", VALUES[1])
+            .attr("id", function (d) {
+                return VALUES[1] + "_" + ASSETGROUPS[d.assets];
+            })
+            .attr("r", circleradius)
+            .attr("cx", function (d) {
+                return x(d[VALUES[1]]);
+            })
+            .attr("cy", function (d) {
+                return y(d.assets) + y.rangeBand() / 3;
+            });
+
         bars.append("rect")
+            .transition()
+            .delay(1500)
             .attr("class", "income3")
             .attr("x", x(0))
             .attr("width", function (d) {
@@ -285,7 +353,7 @@ function drawGraphic3(container_width) {
             })
             .attr("height", y.rangeBand())
 
-        for (i of[1, 2]) {
+        /*for (i of[1, 2]) {
             circles.append("circle")
                 .attr("class", VALUES[i])
                 .attr("id", function (d) {
@@ -313,13 +381,45 @@ function drawGraphic3(container_width) {
                     d3.selectAll(".lowlight")
                         .classed("lowlight", false);
                 });
-        }
+        }*/
 
     }
 
-    function alldots() {
+    function graph4() {
+        d3.select("#graphtext")
+            .html(graphtext.graph4);
+
+        d3.selectAll("rect.income3")
+            .transition()
+            .duration(800)
+            .attr("x", function (d) {
+                return x(d.income3) - circleradius;
+            })
+            .attr("width", 2 * circleradius)
+            .transition()
+            .duration(600)
+            .remove();
+
+        circles.append("circle")
+            .transition()
+            .delay(1400)
+            .duration(200)
+            .attr("class", VALUES[0])
+            .attr("id", function (d) {
+                return VALUES[0] + "_" + ASSETGROUPS[d.assets];
+            })
+            .attr("r", circleradius)
+            .attr("cx", function (d) {
+                return x(d[VALUES[0]]);
+            })
+            .attr("cy", function (d) {
+                return y(d.assets) + y.rangeBand() / 3;
+            });
+
         for (i = 0; i < (VALUES.length - 1); i++) {
             lines.append("line")
+                .transition()
+                .delay(1600)
                 .attr("class", "chartline")
                 .attr("y1", function (d) {
                     return y(d.assets) + y.rangeBand() / 3;
@@ -334,48 +434,12 @@ function drawGraphic3(container_width) {
                     return x(d[VALUES[i + 1]]);
                 });
         }
-
-        for (i = 0; i < VALUES.length; i++) {
-            circles.append("circle")
-                .attr("class", VALUES[i])
-                .attr("id", function (d) {
-                    return VALUES[i] + "_" + ASSETGROUPS[d.assets];
-                })
-                .attr("r", circleradius)
-                .attr("cx", function (d) {
-                    return x(d[VALUES[i]]);
-                })
-                .attr("cy", function (d) {
-                    return y(d.assets) + y.rangeBand() / 3;
-                })
-                .on("mouseover", function (d) {
-                    //make all the other circles and lines less visible
-                    d3.selectAll("circle:not(." + d3.select(this).attr("class") + ")")
-                        .classed("lowlight", true);
-                    d3.selectAll(".chartline")
-                        .classed("lowlight", true);
-                })
-                .on("mouseout", function (d) {
-                    d3.selectAll(".lowlight")
-                        .classed("lowlight", false);
-                })
-                .on("mouseleave", function (d) {
-                    d3.selectAll(".lowlight")
-                        .classed("lowlight", false);
-                });
-        }
-    }
-
-    function graph4() {
-        d3.select("#graphtext")
-            .html(graphtext.graph4);
-        alldots();
     }
 
     function graph5() {
         d3.select("#graphtext")
             .html(graphtext.graph5);
-        alldots();
+        //alldots();
 
         annotateshape.append("rect")
             .attr("class", "annotate-shape")
@@ -394,6 +458,6 @@ function drawGraphic3(container_width) {
     }
 
 
-    graph5();
+    graph1();
 
 }
