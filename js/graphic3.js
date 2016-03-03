@@ -259,12 +259,12 @@ function drawGraphic3(container_width) {
                 return x(d.income1) - circleradius;
             })
             .attr("width", 2 * circleradius)
-            .transition()
-            .duration(600)
+            .attr("height", 2 * circleradius)
             .attr("y", function (d) {
                 return y(d.assets) + y.rangeBand() / 3;
             })
-            .attr("height", 2 * circleradius)
+            .transition()
+            .duration(700)
             .attr("rx", 2 * circleradius)
             .attr("ry", 2 * circleradius);
 
@@ -326,30 +326,14 @@ function drawGraphic3(container_width) {
                 return x(d.income3) - circleradius;
             })
             .attr("width", 2 * circleradius)
-            .transition()
-            .duration(600)
+            .attr("height", 2 * circleradius)
             .attr("y", function (d) {
                 return y(d.assets) + y.rangeBand() / 3;
             })
-            .attr("height", 2 * circleradius)
+            .transition()
+            .duration(700)
             .attr("rx", 2 * circleradius)
             .attr("ry", 2 * circleradius);
-
-        /*circles.append("circle")
-            .transition()
-            .delay(1400)
-            .duration(200)
-            .attr("class", VALUES[0])
-            .attr("id", function (d) {
-                return VALUES[0] + "_" + ASSETGROUPS[d.assets];
-            })
-            .attr("r", circleradius)
-            .attr("cx", function (d) {
-                return x(d[VALUES[0]]);
-            })
-            .attr("cy", function (d) {
-                return y(d.assets) + y.rangeBand() / 3;
-            });*/
 
         bars.append("rect")
             .transition()
@@ -377,30 +361,14 @@ function drawGraphic3(container_width) {
                 return x(d.income2) - circleradius;
             })
             .attr("width", 2 * circleradius)
-            .transition()
-            .duration(600)
+            .attr("height", 2 * circleradius)
             .attr("y", function (d) {
                 return y(d.assets) + y.rangeBand() / 3;
             })
-            .attr("height", 2 * circleradius)
+            .transition()
+            .duration(700)
             .attr("rx", 2 * circleradius)
             .attr("ry", 2 * circleradius);
-
-        /*circles.append("circle")
-            .transition()
-            .delay(1400)
-            .duration(200)
-            .attr("class", VALUES[1])
-            .attr("id", function (d) {
-                return VALUES[1] + "_" + ASSETGROUPS[d.assets];
-            })
-            .attr("r", circleradius)
-            .attr("cx", function (d) {
-                return x(d[VALUES[1]]);
-            })
-            .attr("cy", function (d) {
-                return y(d.assets) + y.rangeBand() / 3;
-            });*/
 
         for (i = 0; i < (VALUES.length - 1); i++) {
             lines.append("line")
