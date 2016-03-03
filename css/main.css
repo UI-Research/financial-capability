@@ -103,7 +103,7 @@ body {
 /*Graph 3*/
 
 #graphtext {
-    min-height: 5em;
+    min-height: 2em;
     display: block;
     margin-top: 0.5em;
 }

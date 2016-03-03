@@ -14,11 +14,11 @@ var ASSETGROUPS = {
 
 
 var graphtext = {
-    graph1: "Low income people have some hardship, but savings matter",
-    graph2: "High income people have less hardship but same pattern by savings",
-    graph3: "Same for middle income",
-    graph4: "Overall income matters, but SAVINGS YO",
-    graph5: "Being low income with modest savings is better than being higher income and living paycheck to paycheck"
+    graph1: "After a disruption to income, lower-income families experience some hardship, but more savings help lessen the blow",
+    graph2: "Higher-income families experience less hardship overall, but the savings pattern still stands.",
+    graph3: "It’s the same story for middle-income families",
+    graph4: "Income matters, but when it comes to weathering financial shocks, savings are key",
+    graph5: "In fact, being low income with modest savings is more advantageous than being higher income and living paycheck to paycheck"
 }
 
 function buttonStyle(step) {
