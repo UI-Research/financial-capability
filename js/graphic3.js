@@ -231,6 +231,12 @@ function drawGraphic3(container_width) {
             return LABELS[d];
         });
 
+    //transition durations
+    var rectsquare = 800,
+        squarecircle = 700,
+        bardelay = 1500,
+        barappear = 700;
+
     function graph1() {
         d3.select("#graphtext")
             .html(graphtext.graph1);
@@ -255,7 +261,7 @@ function drawGraphic3(container_width) {
 
         d3.selectAll("rect.income1")
             .transition()
-            .duration(800)
+            .duration(rectsquare)
             .attr("x", function (d) {
                 return x(d.income1) - circleradius;
             })
@@ -265,7 +271,7 @@ function drawGraphic3(container_width) {
                 return y(d.assets) + y.rangeBand() / 3;
             })
             .transition()
-            .duration(700)
+            .duration(squarecircle)
             .attr("rx", 2 * circleradius)
             .attr("ry", 2 * circleradius);
         /*.on("mouseover", function (d) {
@@ -286,7 +292,7 @@ function drawGraphic3(container_width) {
 
         bars.append("rect")
             .transition()
-            .delay(1500)
+            .delay(bardelay)
             .attr("class", "income3")
             .attr("x", x(0))
             .attr("y", function (d) {
@@ -297,7 +303,7 @@ function drawGraphic3(container_width) {
             .attr("ry", 0)
             .attr("width", 0)
             .transition()
-            .duration(700)
+            .duration(barappear)
             .attr("width", function (d) {
                 return Math.abs(x(0) - x(d.income3));
             });
@@ -310,7 +316,7 @@ function drawGraphic3(container_width) {
 
         d3.selectAll("rect.income3")
             .transition()
-            .duration(800)
+            .duration(rectsquare)
             .attr("x", function (d) {
                 return x(d.income3) - circleradius;
             })
@@ -320,13 +326,13 @@ function drawGraphic3(container_width) {
                 return y(d.assets) + y.rangeBand() / 3;
             })
             .transition()
-            .duration(700)
+            .duration(squarecircle)
             .attr("rx", 2 * circleradius)
             .attr("ry", 2 * circleradius);
 
         bars.append("rect")
             .transition()
-            .delay(1500)
+            .delay(bardelay)
             .attr("class", "income2")
             .attr("x", x(0))
             .attr("y", function (d) {
@@ -337,7 +343,7 @@ function drawGraphic3(container_width) {
             .attr("ry", 0)
             .attr("width", 0)
             .transition()
-            .duration(700)
+            .duration(barappear)
             .attr("width", function (d) {
                 return Math.abs(x(0) - x(d.income2));
             });
@@ -350,7 +356,7 @@ function drawGraphic3(container_width) {
 
         d3.selectAll("rect.income2")
             .transition()
-            .duration(800)
+            .duration(rectsquare)
             .attr("x", function (d) {
                 return x(d.income2) - circleradius;
             })
@@ -360,14 +366,14 @@ function drawGraphic3(container_width) {
                 return y(d.assets) + y.rangeBand() / 3;
             })
             .transition()
-            .duration(700)
+            .duration(squarecircle)
             .attr("rx", 2 * circleradius)
             .attr("ry", 2 * circleradius);
 
         for (i = 0; i < (VALUES.length - 1); i++) {
             lines.append("line")
                 .transition()
-                .delay(1600)
+                .delay(bardelay)
                 .attr("class", "chartline")
                 .attr("y1", function (d) {
                     return y(d.assets) + y.rangeBand() / 2;
@@ -389,13 +395,16 @@ function drawGraphic3(container_width) {
             .html(graphtext.graph5);
 
         annotateshape.append("rect")
-            .transition()
-            .duration(800)
             .attr("class", "annotate-shape")
             .attr("x", x(0.192))
             .attr("y", 2.5 * y.rangeBand())
+            .attr("height", 0)
             .attr("width", x(0.305) - x(0.192))
+            .transition()
+            .duration(800)
             .attr("height", 3.6 * y.rangeBand());
+
+
 
         /*var annotation = svg.append("text")
             .attr("class", "annotation")
