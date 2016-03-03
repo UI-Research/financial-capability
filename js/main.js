@@ -14,7 +14,6 @@ var HARDSHIPS = {
     hardship4: "Evicted"
 };
 
-
 function wrap(text, width) {
     text.each(function () {
         var text = d3.select(this),

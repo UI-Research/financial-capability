@@ -87,7 +87,7 @@ body {
 }
 
 .income2 {
-   fill: #fdbf11;
+    fill: #fdbf11;
 }
 
 .income3 {
@@ -97,4 +97,46 @@ body {
 
 .lowlight {
     opacity: 0.2;
+}
+
+
+/*Graph 3*/
+
+#graphtext {
+    min-height: 5em;
+    display: block;
+    margin-top: 0.5em;
+}
+
+#buttons {
+    display: block;
+}
+
+.button {
+    color: #ffffff;
+    background-color: #666666;
+    display: inline-block;
+    width: 20px;
+    padding: 3px;
+    cursor: pointer;
+    font: 14px Lato;
+    font-weight: 900;
+    float: left;
+    text-align: center;
+    border: 1px solid #fff;
+    cursor: pointer;
+    pointer-events: visible;
+}
+
+.greyed,
+.greyed:hover {
+    color: #fff;
+    background-color: #e6e7e8 !important;
+    /*pointer-events: none;*/
+    cursor: default;
+}
+
+.button:hover {
+    background-color: #333;
+    color: #fff;
 }
