@@ -261,9 +261,14 @@ function drawGraphic3(container_width) {
             .attr("width", 2 * circleradius)
             .transition()
             .duration(600)
-            .remove();
+            .attr("y", function (d) {
+                return y(d.assets) + y.rangeBand() / 3;
+            })
+            .attr("height", 2 * circleradius)
+            .attr("rx", 2 * circleradius)
+            .attr("ry", 2 * circleradius);
 
-        circles.append("circle")
+        /*circles.append("circle")
             .transition()
             .delay(1400)
             .duration(200)
@@ -277,7 +282,8 @@ function drawGraphic3(container_width) {
             })
             .attr("cy", function (d) {
                 return y(d.assets) + y.rangeBand() / 3;
-            });
+            });*/
+
         /*.on("mouseover", function (d) {
             //make all the other circles and lines less visible
             d3.selectAll("circle:not(." + d3.select(this).attr("class") + ")")
@@ -322,9 +328,14 @@ function drawGraphic3(container_width) {
             .attr("width", 2 * circleradius)
             .transition()
             .duration(600)
-            .remove();
+            .attr("y", function (d) {
+                return y(d.assets) + y.rangeBand() / 3;
+            })
+            .attr("height", 2 * circleradius)
+            .attr("rx", 2 * circleradius)
+            .attr("ry", 2 * circleradius);
 
-        circles.append("circle")
+        /*circles.append("circle")
             .transition()
             .delay(1400)
             .duration(200)
@@ -338,7 +349,7 @@ function drawGraphic3(container_width) {
             })
             .attr("cy", function (d) {
                 return y(d.assets) + y.rangeBand() / 3;
-            });
+            });*/
 
         bars.append("rect")
             .transition()
@@ -368,9 +379,14 @@ function drawGraphic3(container_width) {
             .attr("width", 2 * circleradius)
             .transition()
             .duration(600)
-            .remove();
+            .attr("y", function (d) {
+                return y(d.assets) + y.rangeBand() / 3;
+            })
+            .attr("height", 2 * circleradius)
+            .attr("rx", 2 * circleradius)
+            .attr("ry", 2 * circleradius);
 
-        circles.append("circle")
+        /*circles.append("circle")
             .transition()
             .delay(1400)
             .duration(200)
@@ -384,7 +400,7 @@ function drawGraphic3(container_width) {
             })
             .attr("cy", function (d) {
                 return y(d.assets) + y.rangeBand() / 3;
-            });
+            });*/
 
         for (i = 0; i < (VALUES.length - 1); i++) {
             lines.append("line")
@@ -392,10 +408,10 @@ function drawGraphic3(container_width) {
                 .delay(1600)
                 .attr("class", "chartline")
                 .attr("y1", function (d) {
-                    return y(d.assets) + y.rangeBand() / 3;
+                    return y(d.assets) + y.rangeBand() / 2;
                 })
                 .attr("y2", function (d) {
-                    return y(d.assets) + y.rangeBand() / 3;
+                    return y(d.assets) + y.rangeBand() / 2;
                 })
                 .attr("x1", function (d) {
                     return x(d[VALUES[i]]);
