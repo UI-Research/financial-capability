@@ -14,11 +14,11 @@ var ASSETGROUPS = {
 
 
 var graphtext = {
-    graph1: "Lorem ipsum 1 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    graph2: "Lorem ipsum 2 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    graph3: "Lorem ipsum 3 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    graph4: "Lorem ipsum 4 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    graph5: "Lorem ipsum 5 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    graph1: "Low income people have some hardship, but savings matter",
+    graph2: "High income people have less hardship but same pattern by savings",
+    graph3: "Same for middle income",
+    graph4: "Overall income matters, but SAVINGS YO",
+    graph5: "Being low income with modest savings is better than being higher income and living paycheck to paycheck"
 }
 
 function buttonStyle(step) {
@@ -297,10 +297,10 @@ function drawGraphic3(container_width) {
         bars.append("rect")
             .transition()
             .delay(1500)
-            .attr("class", "income2")
+            .attr("class", "income3")
             .attr("x", x(0))
             .attr("width", function (d) {
-                return Math.abs(x(0) - x(d.income2));
+                return Math.abs(x(0) - x(d.income3));
             })
             .attr("y", function (d) {
                 return y(d.assets);
@@ -312,82 +312,6 @@ function drawGraphic3(container_width) {
     function graph3() {
         d3.select("#graphtext")
             .html(graphtext.graph3);
-
-        d3.selectAll("rect.income2")
-            .transition()
-            .duration(800)
-            .attr("x", function (d) {
-                return x(d.income2) - circleradius;
-            })
-            .attr("width", 2 * circleradius)
-            .transition()
-            .duration(600)
-            .remove();
-
-        circles.append("circle")
-            .transition()
-            .delay(1400)
-            .duration(200)
-            .attr("class", VALUES[1])
-            .attr("id", function (d) {
-                return VALUES[1] + "_" + ASSETGROUPS[d.assets];
-            })
-            .attr("r", circleradius)
-            .attr("cx", function (d) {
-                return x(d[VALUES[1]]);
-            })
-            .attr("cy", function (d) {
-                return y(d.assets) + y.rangeBand() / 3;
-            });
-
-        bars.append("rect")
-            .transition()
-            .delay(1500)
-            .attr("class", "income3")
-            .attr("x", x(0))
-            .attr("width", function (d) {
-                return Math.abs(x(0) - x(d.income3));
-            })
-            .attr("y", function (d) {
-                return y(d.assets);
-            })
-            .attr("height", y.rangeBand())
-
-        /*for (i of[1, 2]) {
-            circles.append("circle")
-                .attr("class", VALUES[i])
-                .attr("id", function (d) {
-                    return VALUES[i] + "_" + ASSETGROUPS[d.assets];
-                })
-                .attr("r", circleradius)
-                .attr("cx", function (d) {
-                    return x(d[VALUES[i]]);
-                })
-                .attr("cy", function (d) {
-                    return y(d.assets) + y.rangeBand() / 3;
-                })
-                .on("mouseover", function (d) {
-                    //make all the other circles and lines less visible
-                    d3.selectAll("circle:not(." + d3.select(this).attr("class") + ")")
-                        .classed("lowlight", true);
-                    d3.selectAll(".chartline")
-                        .classed("lowlight", true);
-                })
-                .on("mouseout", function (d) {
-                    d3.selectAll(".lowlight")
-                        .classed("lowlight", false);
-                })
-                .on("mouseleave", function (d) {
-                    d3.selectAll(".lowlight")
-                        .classed("lowlight", false);
-                });
-        }*/
-
-    }
-
-    function graph4() {
-        d3.select("#graphtext")
-            .html(graphtext.graph4);
 
         d3.selectAll("rect.income3")
             .transition()
@@ -416,6 +340,52 @@ function drawGraphic3(container_width) {
                 return y(d.assets) + y.rangeBand() / 3;
             });
 
+        bars.append("rect")
+            .transition()
+            .delay(1500)
+            .attr("class", "income2")
+            .attr("x", x(0))
+            .attr("width", function (d) {
+                return Math.abs(x(0) - x(d.income2));
+            })
+            .attr("y", function (d) {
+                return y(d.assets);
+            })
+            .attr("height", y.rangeBand())
+
+    }
+
+    function graph4() {
+        d3.select("#graphtext")
+            .html(graphtext.graph4);
+
+        d3.selectAll("rect.income2")
+            .transition()
+            .duration(800)
+            .attr("x", function (d) {
+                return x(d.income2) - circleradius;
+            })
+            .attr("width", 2 * circleradius)
+            .transition()
+            .duration(600)
+            .remove();
+
+        circles.append("circle")
+            .transition()
+            .delay(1400)
+            .duration(200)
+            .attr("class", VALUES[1])
+            .attr("id", function (d) {
+                return VALUES[1] + "_" + ASSETGROUPS[d.assets];
+            })
+            .attr("r", circleradius)
+            .attr("cx", function (d) {
+                return x(d[VALUES[1]]);
+            })
+            .attr("cy", function (d) {
+                return y(d.assets) + y.rangeBand() / 3;
+            });
+
         for (i = 0; i < (VALUES.length - 1); i++) {
             lines.append("line")
                 .transition()
@@ -439,7 +409,6 @@ function drawGraphic3(container_width) {
     function graph5() {
         d3.select("#graphtext")
             .html(graphtext.graph5);
-        //alldots();
 
         annotateshape.append("rect")
             .attr("class", "annotate-shape")
@@ -448,13 +417,13 @@ function drawGraphic3(container_width) {
             .attr("width", x(0.305) - x(0.192))
             .attr("height", 3.6 * y.rangeBand());
 
-        var annotation = svg.append("text")
+        /*var annotation = svg.append("text")
             .attr("class", "annotation")
             //.attr("x", x(0.10))
             .attr("y", 0.9 * y.rangeBand())
             .attr("text-anchor", "start")
             .text("Being low income with modest savings is better than being higher income and living paycheck to paycheck")
-            .call(wrap2, width * 0.4, x(0.19));
+            .call(wrap2, width * 0.4, x(0.19));*/
     }
 
 
