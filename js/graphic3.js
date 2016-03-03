@@ -206,7 +206,7 @@ function drawGraphic3(container_width) {
         })
         .attr("cy", -50)
         .on("mouseover", function (d) {
-            d3.selectAll("circle:not(." + d + ")")
+            d3.selectAll("rect:not(." + d + ")")
                 .classed("lowlight", true);
             d3.selectAll(".chartline")
                 .classed("lowlight", true);
@@ -245,7 +245,8 @@ function drawGraphic3(container_width) {
                 return y(d.assets);
             })
             .attr("height", y.rangeBand())
-            .attr("r", 0);
+            .attr("rx", 0)
+            .attr("ry", 0);
     }
 
     function graph2() {
@@ -267,23 +268,6 @@ function drawGraphic3(container_width) {
             .duration(700)
             .attr("rx", 2 * circleradius)
             .attr("ry", 2 * circleradius);
-
-        /*circles.append("circle")
-            .transition()
-            .delay(1400)
-            .duration(200)
-            .attr("class", VALUES[2])
-            .attr("id", function (d) {
-                return VALUES[2] + "_" + ASSETGROUPS[d.assets];
-            })
-            .attr("r", circleradius)
-            .attr("cx", function (d) {
-                return x(d[VALUES[2]]);
-            })
-            .attr("cy", function (d) {
-                return y(d.assets) + y.rangeBand() / 3;
-            });*/
-
         /*.on("mouseover", function (d) {
             //make all the other circles and lines less visible
             d3.selectAll("circle:not(." + d3.select(this).attr("class") + ")")
@@ -305,13 +289,18 @@ function drawGraphic3(container_width) {
             .delay(1500)
             .attr("class", "income3")
             .attr("x", x(0))
-            .attr("width", function (d) {
-                return Math.abs(x(0) - x(d.income3));
-            })
             .attr("y", function (d) {
                 return y(d.assets);
             })
             .attr("height", y.rangeBand())
+            .attr("rx", 0)
+            .attr("ry", 0)
+            .attr("width", 0)
+            .transition()
+            .duration(700)
+            .attr("width", function (d) {
+                return Math.abs(x(0) - x(d.income3));
+            });
 
     }
 
@@ -340,13 +329,18 @@ function drawGraphic3(container_width) {
             .delay(1500)
             .attr("class", "income2")
             .attr("x", x(0))
-            .attr("width", function (d) {
-                return Math.abs(x(0) - x(d.income2));
-            })
             .attr("y", function (d) {
                 return y(d.assets);
             })
             .attr("height", y.rangeBand())
+            .attr("rx", 0)
+            .attr("ry", 0)
+            .attr("width", 0)
+            .transition()
+            .duration(700)
+            .attr("width", function (d) {
+                return Math.abs(x(0) - x(d.income2));
+            });
 
     }
 
@@ -395,6 +389,8 @@ function drawGraphic3(container_width) {
             .html(graphtext.graph5);
 
         annotateshape.append("rect")
+            .transition()
+            .duration(800)
             .attr("class", "annotate-shape")
             .attr("x", x(0.192))
             .attr("y", 2.5 * y.rangeBand())
