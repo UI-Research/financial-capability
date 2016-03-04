@@ -385,6 +385,11 @@ function drawGraphic3(container_width) {
                     return x(d[VALUES[i]]);
                 })
                 .attr("x2", function (d) {
+                    return x(d[VALUES[i]]);
+                })
+                .transition()
+                .duration(500)
+                .attr("x2", function (d) {
                     return x(d[VALUES[i + 1]]);
                 });
         }
@@ -403,18 +408,7 @@ function drawGraphic3(container_width) {
             .transition()
             .duration(800)
             .attr("height", 3.6 * y.rangeBand());
-
-
-
-        /*var annotation = svg.append("text")
-            .attr("class", "annotation")
-            //.attr("x", x(0.10))
-            .attr("y", 0.9 * y.rangeBand())
-            .attr("text-anchor", "start")
-            .text("Being low income with modest savings is better than being higher income and living paycheck to paycheck")
-            .call(wrap2, width * 0.4, x(0.19));*/
     }
-
 
     graph1();
 
