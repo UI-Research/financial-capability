@@ -91,14 +91,14 @@ function drawGraphic3(container_width) {
 
     var margin = {
         top: 80,
-        right: 80,
+        right: 10,
         bottom: 15,
         left: 100
     };
     var padding = 20,
-        chart_aspect_height = 0.5;
+        chart_aspect_height = 0.6;
     var width = container_width - margin.left - margin.right,
-        height = Math.ceil(width * chart_aspect_height) - margin.top - margin.bottom - padding;
+        height = Math.ceil(Math.max(350, width * chart_aspect_height)) - margin.top - margin.bottom - padding;
 
     $graphic.empty();
 
