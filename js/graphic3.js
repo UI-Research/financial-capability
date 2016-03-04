@@ -91,7 +91,7 @@ function drawGraphic3(container_width) {
 
     var margin = {
         top: 80,
-        right: 10,
+        right: 20,
         bottom: 15,
         left: 100
     };

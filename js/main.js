@@ -76,7 +76,7 @@ function drawGraphic1(container_width) {
     var chart_aspect_height = 0.6;
     var margin = {
         top: 85,
-        right: 15,
+        right: 20,
         bottom: 55,
         left: 15
     };
