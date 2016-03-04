@@ -595,7 +595,7 @@ function drawGraphic3a(container_width) {
 
     var chart_aspect_height = 0.4;
     var margin = {
-        top: 35,
+        top: 55,
         right: 45,
         bottom: 15,
         left: 100
@@ -654,21 +654,16 @@ function drawGraphic3a(container_width) {
         .attr("text-anchor", "end")
         .text("Savings");
 
-    var titles = svg.selectAll(".subtitle")
-        .data(LABELS)
-        .enter()
-        .append("g")
-        .attr("class", "subtitle");
-
-    titles.append("text")
-        .attr("x", function (d, i) {
-            return STARTS[i] + i * padding;
-        })
-        .attr("y", -20)
-        .attr("text-anchor", "start")
-        .text(function (d, i) {
-            return d;
-        });
+    //in a loop bc .call was broken otherwise
+    for (i = 0; i < VALUES.length; i++) {
+        svg.append("text")
+            .attr("class", "subtitle")
+            .attr("x", STARTS[i] + i * padding)
+            .attr("y", -50)
+            .attr("text-anchor", "start")
+            .text(LABELS[i])
+            .call(wrap2, width/4, STARTS[i] + i * padding);
+    }
 
     var bars = svg.selectAll(".bar")
         .data(data)
