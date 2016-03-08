@@ -14,11 +14,11 @@ var ASSETGROUPS = {
 
 
 var graphtext = {
-    graph1: "After a disruption to income, lower-income families experience some hardship, but more savings help lessen the blow.",
-    graph2: "Higher-income families experience less hardship overall, but the savings pattern still stands.",
+    graph1: "Low-income families experience some hardship after an income disruption, but more savings help lessen the blow.",
+    graph2: "High-income families experience less hardship overall, but the savings pattern still stands.",
     graph3: "It’s the same story for middle-income families.",
     graph4: "Income matters, but when it comes to weathering financial shocks, savings are key.",
-    graph5: "In fact, being low income with modest savings is more advantageous than being higher income and living paycheck to paycheck."
+    graph5: "In fact, a low-income family with modest savings is better off than a higher-income family living paycheck to paycheck."
 }
 
 function buttonStyle(step) {
