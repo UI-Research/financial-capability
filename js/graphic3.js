@@ -18,7 +18,7 @@ var graphtext = {
     graph2: "High-income families experience less hardship overall, but the savings pattern still stands.",
     graph3: "It’s the same story for middle-income families.",
     graph4: "Income matters, but when it comes to weathering financial shocks, savings are key.",
-    graph5: "In fact, a low-income family with modest savings is better off than a higher-income family living paycheck to paycheck."
+    graph5: "In fact, a low-income family with modest savings is better off than a middle-income family living paycheck to paycheck."
 }
 
 function buttonStyle(step) {
