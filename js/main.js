@@ -156,7 +156,7 @@ function drawGraphic1(container_width) {
         .attr("class", "annotation")
         .attr("y", -90)
         .attr("text-anchor", "middle")
-        .text("More than half of families have less than $2,000 in non-retirement savings")
+        .text("More than half of families have less than $2,000 in nonretirement savings")
         .call(wrap2, width / 2, 2.25 * x.rangeBand());
 
     svg.append("line")
