@@ -69,11 +69,11 @@ body {
     font-size: 13px;
 }
 
-.annotate-line {
+.annotateline {
     fill: none;
-    stroke-width: 1.5px;
-    stroke: #ccc;
-    shape-rendering: crispEdges;
+    stroke-width: 25px;
+    stroke: #ebebeb;
+    /*shape-rendering: crispEdges;*/
 }
 
 .axistitle {

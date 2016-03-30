@@ -157,7 +157,7 @@ function drawGraphic3(container_width) {
     var axistitlex = svg.append("text")
         .attr("class", "axistitle")
         .attr("x", x(0.15))
-        .attr("y", -15)
+        .attr("y", -20)
         .attr("text-anchor", "middle")
         .text("Share experiencing hardship");
 
@@ -191,8 +191,8 @@ function drawGraphic3(container_width) {
 
     var legspacing = 130;
 
-    var legend = svg.selectAll(".legend")
-        .data(VALUES)
+    /*var legend = svg.selectAll(".legend")
+        .data(VALUES[2])
         .enter()
         .append("g")
 
@@ -229,7 +229,7 @@ function drawGraphic3(container_width) {
         .attr("text-anchor", "start")
         .text(function (d, i) {
             return LABELS[d];
-        });
+        });*/
 
     //transition durations
     var rectsquare = 800,
@@ -253,12 +253,84 @@ function drawGraphic3(container_width) {
             .attr("height", y.rangeBand())
             .attr("rx", 0)
             .attr("ry", 0);
+
+        svg.append("circle")
+            .attr("class", function (d) {
+                return "income1";
+            })
+            .attr("id", "legcirc1")
+            .attr("r", circleradius)
+            .attr("cx", function (d, i) {
+                return 0 * legspacing + 10;
+            })
+            .attr("cy", -50)
+            .on("mouseover", function (d) {
+                d3.selectAll("rect:not(." + "income1" + ")")
+                    .classed("lowlight", true);
+                d3.selectAll(".chartline")
+                    .classed("lowlight", true);
+            })
+            .on("mouseout", function (d) {
+                d3.selectAll(".lowlight")
+                    .classed("lowlight", false);
+            })
+            .on("mouseleave", function (d) {
+                d3.selectAll(".lowlight")
+                    .classed("lowlight", false);
+            });
+
+        svg.append("text")
+            .attr("class", "legend")
+            .attr("id", "legtext1")
+            .attr("x", function (d, i) {
+                return 0 * legspacing + 20;
+            })
+            .attr("y", -45)
+            .attr("text-anchor", "start")
+            .text(function (d, i) {
+                return LABELS["income1"];
+            });
+        
+         /*annotateshape.append("rect")
+            .attr("class", "annotate-shape")
+            .attr("id", "annontateshape")
+            //.attr("x", x(0.192))
+            .attr("y", 2.5 * y.rangeBand())
+            //.attr("height", 0)
+            .attr("width", x(0.305) - x(0.192))
+            //.transition()
+            //.duration(800)
+            .attr("height", 1.5 * y.rangeBand())
+            .attr("transform", "translate(" + x(0.25) + "," + 0.5 * y.rangeBand() + ") rotate(40)");*/
+        
+        /*annotateshape.append("line")
+                .attr("class", "annotateline")
+                .attr("y1", 2.7 * y.rangeBand())
+                .attr("y2", height- 6)
+                .attr("x1", x(0.185))
+                .attr("x2", x(0.306));*/
     }
 
     function graph2() {
         d3.select("#graphtext")
             .html(graphtext.graph2);
 
+        //transition the legend items over to final posiition
+        d3.select("#legcirc1")
+            .transition()
+            .duration(rectsquare)
+            .attr("cx", function (d, i) {
+                return 2 * legspacing + 10;
+            })
+
+        d3.select("#legtext1")
+            .transition()
+            .duration(rectsquare)
+            .attr("x", function (d, i) {
+                return 2 * legspacing + 20;
+            })
+
+        //turn bars into circles
         d3.selectAll("rect.income1")
             .transition()
             .duration(rectsquare)
@@ -289,6 +361,52 @@ function drawGraphic3(container_width) {
             d3.selectAll(".lowlight")
                 .classed("lowlight", false);
         });*/
+
+        svg.append("circle")
+            .attr("id", "legcirc3")
+            .attr("opacity", 0)
+            .attr("class", function (d) {
+                return "income3";
+            })
+            .attr("r", circleradius)
+            .attr("cx", function (d, i) {
+                return 0 * legspacing + 10;
+            })
+            .attr("cy", -50)
+            .on("mouseover", function (d) {
+                d3.selectAll("rect:not(." + "income3" + ")")
+                    .classed("lowlight", true);
+                d3.selectAll(".chartline")
+                    .classed("lowlight", true);
+            })
+            .on("mouseout", function (d) {
+                d3.selectAll(".lowlight")
+                    .classed("lowlight", false);
+            })
+            .on("mouseleave", function (d) {
+                d3.selectAll(".lowlight")
+                    .classed("lowlight", false);
+            });
+
+        d3.select("#legcirc3")
+            .transition()
+            .delay(bardelay)
+            .duration(1)
+            .attr("opacity", 1)
+
+        svg.append("text")
+            .transition()
+            .delay(bardelay)
+            .attr("class", "legend")
+            .attr("id", "legtext3")
+            .attr("x", function (d, i) {
+                return 0 * legspacing + 20;
+            })
+            .attr("y", -45)
+            .attr("text-anchor", "start")
+            .text(function (d, i) {
+                return LABELS["income3"];
+            });
 
         bars.append("rect")
             .transition()
@@ -329,6 +447,52 @@ function drawGraphic3(container_width) {
             .duration(squarecircle)
             .attr("rx", 2 * circleradius)
             .attr("ry", 2 * circleradius);
+
+        svg.append("circle")
+            .attr("id", "legcirc2")
+            .attr("opacity", 0)
+            .attr("class", function (d) {
+                return "income2";
+            })
+            .attr("r", circleradius)
+            .attr("cx", function (d, i) {
+                return 1 * legspacing + 10;
+            })
+            .attr("cy", -50)
+            .on("mouseover", function (d) {
+                d3.selectAll("rect:not(." + "income2" + ")")
+                    .classed("lowlight", true);
+                d3.selectAll(".chartline")
+                    .classed("lowlight", true);
+            })
+            .on("mouseout", function (d) {
+                d3.selectAll(".lowlight")
+                    .classed("lowlight", false);
+            })
+            .on("mouseleave", function (d) {
+                d3.selectAll(".lowlight")
+                    .classed("lowlight", false);
+            });
+
+        d3.select("#legcirc2")
+            .transition()
+            .delay(bardelay)
+            .duration(1)
+            .attr("opacity", 1)
+
+        svg.append("text")
+            .transition()
+            .delay(bardelay)
+            .attr("class", "legend")
+            .attr("id", "legtext2")
+            .attr("x", function (d, i) {
+                return 1 * legspacing + 20;
+            })
+            .attr("y", -45)
+            .attr("text-anchor", "start")
+            .text(function (d, i) {
+                return LABELS["income2"];
+            });
 
         bars.append("rect")
             .transition()
@@ -399,15 +563,6 @@ function drawGraphic3(container_width) {
         d3.select("#graphtext")
             .html(graphtext.graph5);
 
-        annotateshape.append("rect")
-            .attr("class", "annotate-shape")
-            .attr("x", x(0.192))
-            .attr("y", 2.5 * y.rangeBand())
-            .attr("height", 0)
-            .attr("width", x(0.305) - x(0.192))
-            .transition()
-            .duration(800)
-            .attr("height", 3.6 * y.rangeBand());
     }
 
     graph1();
