@@ -290,25 +290,6 @@ function drawGraphic3(container_width) {
             .text(function (d, i) {
                 return LABELS["income1"];
             });
-        
-         /*annotateshape.append("rect")
-            .attr("class", "annotate-shape")
-            .attr("id", "annontateshape")
-            //.attr("x", x(0.192))
-            .attr("y", 2.5 * y.rangeBand())
-            //.attr("height", 0)
-            .attr("width", x(0.305) - x(0.192))
-            //.transition()
-            //.duration(800)
-            .attr("height", 1.5 * y.rangeBand())
-            .attr("transform", "translate(" + x(0.25) + "," + 0.5 * y.rangeBand() + ") rotate(40)");*/
-        
-        /*annotateshape.append("line")
-                .attr("class", "annotateline")
-                .attr("y1", 2.7 * y.rangeBand())
-                .attr("y2", height- 6)
-                .attr("x1", x(0.185))
-                .attr("x2", x(0.306));*/
     }
 
     function graph2() {
@@ -562,6 +543,15 @@ function drawGraphic3(container_width) {
     function graph5() {
         d3.select("#graphtext")
             .html(graphtext.graph5);
+
+        annotateshape.append("ellipse")
+            .attr("class", "annotate-shape")
+            .attr("id", "annontateshape")
+            .attr("cx", x(0.25))
+            .attr("cy", 3 * y.rangeBand())
+            .attr("rx", x(0.10))
+            .attr("ry", 0.75 * y.rangeBand())
+            .attr("transform", "translate(" + x(0.08) + "," + -2.8 * y.rangeBand() + ") rotate(30)")
 
     }
 

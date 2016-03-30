@@ -63,6 +63,9 @@ body {
 
 .annotate-shape {
     fill: #ebebeb;
+    /*fill: none;
+    stroke: #171717;
+    stroke-width: 1px;*/
 }
 
 .annotation {
