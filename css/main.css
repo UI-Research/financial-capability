@@ -45,7 +45,7 @@ body {
 .chartline {
     fill: none;
     stroke-width: 1px;
-    stroke: #333333;
+    stroke: #b4b4b4;
     shape-rendering: crispEdges;
 }
 
@@ -62,7 +62,7 @@ body {
 }
 
 .annotate-shape {
-    fill: #ebebeb;
+    fill: #e8e8e8;
     /*fill: none;
     stroke: #171717;
     stroke-width: 1px;*/

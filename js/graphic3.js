@@ -520,6 +520,7 @@ function drawGraphic3(container_width) {
                 .transition()
                 .delay(bardelay)
                 .attr("class", "chartline")
+            .style("stroke-dasharray", "3,3")
                 .attr("y1", function (d) {
                     return y(d.assets) + y.rangeBand() / 2;
                 })
