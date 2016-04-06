@@ -1,4 +1,4 @@
-var MOBILE_THRESHOLD = 700;
+var MOBILE_THRESHOLD = 600;
 var graphic1_data_url = "data/graphic1.csv";
 var graphic2_data_url = "data/graphic2.csv";
 var graphic3a_data_url = "data/graphic3a.csv";
@@ -13,6 +13,7 @@ var HARDSHIPS = {
     hardship3: "Missed housing payment",
     hardship4: "Evicted"
 };
+var MONEY_MOBILE = ["$0", "$1- $249", "$250- $749", "$750- $2k", "$2k - $5k", "$5k- $20k", "$20k+"];
 
 function wrap(text, width) {
     text.each(function () {
@@ -74,13 +75,25 @@ function drawGraphic1(container_width) {
         container_width = 1170;
     }
 
-    var chart_aspect_height = 0.6;
-    var margin = {
-        top: 85,
-        right: 20,
-        bottom: 55,
-        left: 15
-    };
+    if (container_width <= MOBILE_THRESHOLD) {
+        isMobile = true;
+        var chart_aspect_height = 1.2;
+        var margin = {
+            top: 135,
+            right: 20,
+            bottom: 55,
+            left: 5
+        };
+    } else {
+        isMobile = false;
+        var chart_aspect_height = 0.6;
+        var margin = {
+            top: 85,
+            right: 20,
+            bottom: 55,
+            left: 15
+        };
+    }
 
     var width = container_width - margin.left - margin.right,
         height = Math.ceil(width * chart_aspect_height) - margin.top - margin.bottom;
@@ -108,6 +121,13 @@ function drawGraphic1(container_width) {
     var xAxis = d3.svg.axis()
         .scale(x)
         .tickSize(0)
+        .tickFormat(function (d, i) {
+            if (isMobile) {
+                return MONEY_MOBILE[i];
+            } else {
+                return d;
+            }
+        })
         .orient("bottom");
 
     var gx = svg.append("g")
@@ -153,9 +173,16 @@ function drawGraphic1(container_width) {
             return d3.format("%")(d.share);
         });
 
+    if (isMobile) {
+        var annotatey = -margin.top;
+    } else {
+        var annotatey = -92;
+    }
+
+
     var annotation = svg.append("text")
         .attr("class", "annotation")
-        .attr("y", -92)
+        .attr("y", annotatey)
         .attr("text-anchor", "middle")
         .text("More than half of families have less than $2,000 in nonretirement savings")
         .call(wrap2, width / 2, 2.25 * x.rangeBand());
@@ -180,8 +207,8 @@ function drawGraphic1(container_width) {
         .attr("x2", x("$750 - $1,999") + x.rangeBand())
         .attr("y1", y(0.1))
         .attr("y2", -48);
-    
-        svg.append("line")
+
+    svg.append("line")
         .attr("class", "annotate-line")
         .attr("x1", x("$1 - $249") + x.rangeBand())
         .attr("x2", x("$1 - $249") + x.rangeBand())
@@ -349,7 +376,6 @@ function drawGraphic2(container_width) {
 
 //horizontal split bar chart
 function drawGraphic3a(container_width) {
-
     var LABELS = ["Missed housing payment", "Missed utility payment", "Received public benefits"];
     var VALUES = ["hardship3", "hardship2", "hardship1"];
 
@@ -363,16 +389,30 @@ function drawGraphic3a(container_width) {
         container_width = 1170;
     }
 
-    var chart_aspect_height = 0.4;
-    var margin = {
-        top: 55,
-        right: 45,
-        bottom: 15,
-        left: 100
-    };
+    if (container_width <= MOBILE_THRESHOLD) {
+        isMobile = true;
+        var chart_aspect_height = 4;
+        var margin = {
+            top: 35,
+            right: 45,
+            bottom: -35,
+            left: 65
+        };
+        var width = container_width - margin.left - margin.right,
+            height = Math.ceil(width * chart_aspect_height) - margin.top - margin.bottom;
 
-    var width = container_width - margin.left - margin.right,
-        height = 300 - margin.top - margin.bottom;
+    } else {
+        isMobile = false;
+        var chart_aspect_height = 0.4;
+        var margin = {
+            top: 55,
+            right: 45,
+            bottom: 15,
+            left: 100
+        };
+        var width = container_width - margin.left - margin.right,
+            height = 300 - margin.top - margin.bottom;
+    }
 
     $graphic.empty();
 
@@ -382,97 +422,178 @@ function drawGraphic3a(container_width) {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    var y = d3.scale.ordinal()
-        .rangeRoundBands([height, 0], .1)
-        .domain(data.map(function (d) {
-            return d.assets;
-        }));
-
-    var max = [];
-    //calculate spacing of segments
-    for (i = 0; i < VALUES.length; i++) {
-        max[i] = d3.max(data, function (d) {
-            return (d[VALUES[i]]);
-        });
-    }
-    var prop = [];
-    for (i = 0; i < VALUES.length; i++) {
-        prop[i] = 0.75 * max[i] / (max[0] + max[1] + max[2]);
-    }
-
-    var padding = 65;
-
-    var STARTS = [0, width * prop[0], width * (prop[0] + prop[1]), width * (prop[0] + prop[1] + prop[2])];
-
-    var yAxis = d3.svg.axis()
-        .scale(y)
-        .tickSize(0)
-        .orient("left");
-
-    var gy = svg.append("g")
-        .attr("class", "y axis-show")
-        .call(yAxis);
-
-    gy.selectAll("text")
-        .attr("dx", -4);
-
-    //label axis
-    var axistitle = svg.append("text")
-        .attr("class", "axistitle")
-        .attr("x", -5)
-        .attr("y", 2)
-        .attr("text-anchor", "end")
-        .text("Savings");
-
-    //in a loop bc .call was broken otherwise
-    for (i = 0; i < VALUES.length; i++) {
-        svg.append("text")
-            .attr("class", "subtitle")
-            .attr("x", STARTS[i] + i * padding)
-            .attr("y", -50)
-            .attr("text-anchor", "start")
-            .text(LABELS[i])
-            .call(wrap2, width/4, STARTS[i] + i * padding);
-    }
-
-    var bars = svg.selectAll(".bar")
-        .data(data)
-        .enter()
-        .append("g")
-        .attr("class", "bar");
-
-    var barlabels = svg.selectAll(".point-label")
-        .data(data)
-        .enter()
-        .append("g")
-        .attr("class", "point-label");
-
-    for (i = 0; i < VALUES.length; i++) {
+    if (isMobile) {
         var x = d3.scale.linear()
-            .range([STARTS[i] + (i * padding), STARTS[i + 1] + (i * padding)])
-            .domain([0, max[i]]);
+            .range([0, width])
+            .domain([0, d3.max(data, function (d) {
+                return (d[VALUES[2]]);
+            })]);
 
-        bars.append("rect")
-            .attr("class", VALUES[i] + "_0")
-            .attr("x", x(0))
-            .attr("width", function (d) {
-                return Math.abs(x(0) - x(d[VALUES[i]]));
-            })
-            .attr("y", function (d) {
-                return y(d.assets);
-            })
-            .attr("height", y.rangeBand())
+        var bars = svg.selectAll(".bar")
+            .data(data)
+            .enter()
+            .append("g")
+            .attr("class", "bar");
 
-        barlabels.append("text")
-            .attr("x", function (d) {
-                return x(d[VALUES[i]]) + 4;
-            })
-            .attr("y", function (d) {
-                return y(d.assets) + y.rangeBand() / 2 + 4;
-            })
-            .text(function (d) {
-                return d3.format("%")(d[VALUES[i]]);
+        var barlabels = svg.selectAll(".point-label")
+            .data(data)
+            .enter()
+            .append("g")
+            .attr("class", "point-label");
+
+        var axistitle = svg.append("text")
+            .attr("class", "axistitle")
+            .attr("x", -5)
+            .attr("y", 2)
+            .attr("text-anchor", "end")
+            .text("Savings");
+
+        for (i = 0; i < VALUES.length; i++) {
+            var y = d3.scale.ordinal()
+                .rangeRoundBands([(height / 3) * (i + 1) - 45, (height / 3) * i], .1)
+                .domain(data.map(function (d) {
+                    return d.assets;
+                }));
+
+            var yAxis = d3.svg.axis()
+                .scale(y)
+                .tickSize(0)
+                .tickFormat(function (d, i) {
+                    return MONEY_MOBILE[i];
+                })
+                .orient("left");
+
+            var gy = svg.append("g")
+                .attr("class", "y axis-show")
+                .call(yAxis);
+
+            gy.selectAll("text")
+                .attr("dx", -4);
+
+            svg.append("text")
+                .attr("class", "subtitle")
+                .attr("x", 0)
+                .attr("y",  (height / 3) * i - 12)
+                .attr("text-anchor", "start")
+                .text(LABELS[i])
+                .call(wrap, width);
+
+            bars.append("rect")
+                .attr("class", VALUES[i] + "_0")
+                .attr("x", x(0))
+                .attr("width", function (d) {
+                    return Math.abs(x(0) - x(d[VALUES[i]]));
+                })
+                .attr("y", function (d) {
+                    return y(d.assets);
+                })
+                .attr("height", y.rangeBand())
+
+            barlabels.append("text")
+                .attr("x", function (d) {
+                    return x(d[VALUES[i]]) + 4;
+                })
+                .attr("y", function (d) {
+                    return y(d.assets) + y.rangeBand() / 2 + 4;
+                })
+                .text(function (d) {
+                    return d3.format("%")(d[VALUES[i]]);
+                });
+        }
+    } else {
+        var y = d3.scale.ordinal()
+            .rangeRoundBands([height, 0], .1)
+            .domain(data.map(function (d) {
+                return d.assets;
+            }));
+
+        var max = [];
+        //calculate spacing of segments
+        for (i = 0; i < VALUES.length; i++) {
+            max[i] = d3.max(data, function (d) {
+                return (d[VALUES[i]]);
             });
+        }
+        var prop = [];
+        for (i = 0; i < VALUES.length; i++) {
+            prop[i] = 0.75 * max[i] / (max[0] + max[1] + max[2]);
+        }
+
+        var padding = 65;
+
+        var STARTS = [0, width * prop[0], width * (prop[0] + prop[1]), width * (prop[0] + prop[1] + prop[2])];
+
+        var yAxis = d3.svg.axis()
+            .scale(y)
+            .tickSize(0)
+            .orient("left");
+
+        var gy = svg.append("g")
+            .attr("class", "y axis-show")
+            .call(yAxis);
+
+        gy.selectAll("text")
+            .attr("dx", -4);
+
+        //label axis
+        var axistitle = svg.append("text")
+            .attr("class", "axistitle")
+            .attr("x", -5)
+            .attr("y", 2)
+            .attr("text-anchor", "end")
+            .text("Savings");
+
+        //in a loop bc .call was broken otherwise
+        for (i = 0; i < VALUES.length; i++) {
+            svg.append("text")
+                .attr("class", "subtitle")
+                .attr("x", STARTS[i] + i * padding)
+                .attr("y", -50)
+                .attr("text-anchor", "start")
+                .text(LABELS[i])
+                .call(wrap2, width / 4, STARTS[i] + i * padding);
+        }
+
+        var bars = svg.selectAll(".bar")
+            .data(data)
+            .enter()
+            .append("g")
+            .attr("class", "bar");
+
+        var barlabels = svg.selectAll(".point-label")
+            .data(data)
+            .enter()
+            .append("g")
+            .attr("class", "point-label");
+
+        for (i = 0; i < VALUES.length; i++) {
+            var x = d3.scale.linear()
+                .range([STARTS[i] + (i * padding), STARTS[i + 1] + (i * padding)])
+                .domain([0, max[i]]);
+
+            bars.append("rect")
+                .attr("class", VALUES[i] + "_0")
+                .attr("x", x(0))
+                .attr("width", function (d) {
+                    return Math.abs(x(0) - x(d[VALUES[i]]));
+                })
+                .attr("y", function (d) {
+                    return y(d.assets);
+                })
+                .attr("height", y.rangeBand())
+
+            barlabels.append("text")
+                .attr("x", function (d) {
+                    return x(d[VALUES[i]]) + 4;
+                })
+                .attr("y", function (d) {
+                    return y(d.assets) + y.rangeBand() / 2 + 4;
+                })
+                .text(function (d) {
+                    return d3.format("%")(d[VALUES[i]]);
+                });
+        }
     }
+
 
 }
