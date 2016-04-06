@@ -81,8 +81,8 @@ body {
 
 .annotate-line {
     fill: none;
-    stroke-width: 1.5px;
-    stroke: #ccc;
+    stroke-width: 3px;
+    stroke: #e3e3e3;
     shape-rendering: crispEdges;
 }
 

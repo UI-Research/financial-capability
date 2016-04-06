@@ -237,6 +237,21 @@ function drawGraphic3(container_width) {
         bardelay = 1500,
         barappear = 700;
 
+    function newbars(v) {
+        bars.append("rect")
+            .attr("class", v)
+            .attr("x", x(0))
+            .attr("width", function (d) {
+                return Math.abs(x(0) - x(d[v]));
+            })
+            .attr("y", function (d) {
+                return y(d.assets);
+            })
+            .attr("height", y.rangeBand())
+            .attr("rx", 0)
+            .attr("ry", 0);
+    }
+
     function graph1() {
         d3.select("#graphtext")
             .html(graphtext.graph1);
@@ -260,9 +275,7 @@ function drawGraphic3(container_width) {
             })
             .attr("id", "legcirc1")
             .attr("r", circleradius)
-            .attr("cx", function (d, i) {
-                return 0 * legspacing + 10;
-            })
+            .attr("cx", 0 * legspacing + 10)
             .attr("cy", -50)
             .on("mouseover", function (d) {
                 d3.selectAll("rect:not(." + "income1" + ")")
@@ -282,9 +295,7 @@ function drawGraphic3(container_width) {
         svg.append("text")
             .attr("class", "legend")
             .attr("id", "legtext1")
-            .attr("x", function (d, i) {
-                return 0 * legspacing + 20;
-            })
+            .attr("x", 0 * legspacing + 20)
             .attr("y", -45)
             .attr("text-anchor", "start")
             .text(function (d, i) {
@@ -300,16 +311,12 @@ function drawGraphic3(container_width) {
         d3.select("#legcirc1")
             .transition()
             .duration(rectsquare)
-            .attr("cx", function (d, i) {
-                return 2 * legspacing + 10;
-            })
+            .attr("cx", 2 * legspacing + 10)
 
         d3.select("#legtext1")
             .transition()
             .duration(rectsquare)
-            .attr("x", function (d, i) {
-                return 2 * legspacing + 20;
-            })
+            .attr("x", 2 * legspacing + 20)
 
         //turn bars into circles
         d3.selectAll("rect.income1")
@@ -345,14 +352,12 @@ function drawGraphic3(container_width) {
 
         svg.append("circle")
             .attr("id", "legcirc3")
-            .attr("opacity", 0)
+            /*.attr("opacity", 0)*/
             .attr("class", function (d) {
                 return "income3";
             })
             .attr("r", circleradius)
-            .attr("cx", function (d, i) {
-                return 0 * legspacing + 10;
-            })
+            .attr("cx", -margin.left)
             .attr("cy", -50)
             .on("mouseover", function (d) {
                 d3.selectAll("rect:not(." + "income3" + ")")
@@ -369,25 +374,31 @@ function drawGraphic3(container_width) {
                     .classed("lowlight", false);
             });
 
-        d3.select("#legcirc3")
+        /*d3.select("#legcirc3")
             .transition()
             .delay(bardelay)
             .duration(1)
-            .attr("opacity", 1)
+            .attr("opacity", 1)*/
+
+        d3.select("#legcirc3")
+            .transition()
+            .duration(rectsquare)
+            .attr("cx", 0 * legspacing + 10)
 
         svg.append("text")
-            .transition()
-            .delay(bardelay)
+            //.transition()
+            //.delay(bardelay)
             .attr("class", "legend")
             .attr("id", "legtext3")
-            .attr("x", function (d, i) {
-                return 0 * legspacing + 20;
-            })
+            .attr("x", -margin.left + 10)
             .attr("y", -45)
             .attr("text-anchor", "start")
             .text(function (d, i) {
                 return LABELS["income3"];
-            });
+            })
+            .transition()
+            .duration(rectsquare)
+            .attr("x", 0 * legspacing + 20)
 
         bars.append("rect")
             .transition()
@@ -431,15 +442,13 @@ function drawGraphic3(container_width) {
 
         svg.append("circle")
             .attr("id", "legcirc2")
-            .attr("opacity", 0)
+            //.attr("opacity", 0)
             .attr("class", function (d) {
                 return "income2";
             })
             .attr("r", circleradius)
-            .attr("cx", function (d, i) {
-                return 1 * legspacing + 10;
-            })
-            .attr("cy", -50)
+            .attr("cx", 1 * legspacing + 10)
+            .attr("cy", -margin.top)
             .on("mouseover", function (d) {
                 d3.selectAll("rect:not(." + "income2" + ")")
                     .classed("lowlight", true);
@@ -457,23 +466,23 @@ function drawGraphic3(container_width) {
 
         d3.select("#legcirc2")
             .transition()
-            .delay(bardelay)
-            .duration(1)
-            .attr("opacity", 1)
+            .duration(rectsquare)
+            .attr("cy", -50)
 
         svg.append("text")
-            .transition()
-            .delay(bardelay)
+            //.transition()
+            //.delay(bardelay)
             .attr("class", "legend")
             .attr("id", "legtext2")
-            .attr("x", function (d, i) {
-                return 1 * legspacing + 20;
-            })
-            .attr("y", -45)
+            .attr("x", 1 * legspacing + 20)
+            .attr("y", -margin.top + 5)
             .attr("text-anchor", "start")
             .text(function (d, i) {
                 return LABELS["income2"];
-            });
+            })
+            .transition()
+            .duration(rectsquare)
+            .attr("y", -45)
 
         bars.append("rect")
             .transition()
@@ -520,7 +529,7 @@ function drawGraphic3(container_width) {
                 .transition()
                 .delay(bardelay)
                 .attr("class", "chartline")
-            .style("stroke-dasharray", "3,3")
+                .style("stroke-dasharray", "3,3")
                 .attr("y1", function (d) {
                     return y(d.assets) + y.rangeBand() / 2;
                 })
@@ -547,12 +556,16 @@ function drawGraphic3(container_width) {
 
         annotateshape.append("ellipse")
             .attr("class", "annotate-shape")
+            .attr("opacity", 0)
             .attr("id", "annontateshape")
             .attr("cx", x(0.25))
             .attr("cy", 3 * y.rangeBand())
             .attr("rx", x(0.10))
             .attr("ry", 0.75 * y.rangeBand())
             .attr("transform", "translate(" + x(0.08) + "," + -2.8 * y.rangeBand() + ") rotate(30)")
+            .transition()
+            .duration(500)
+            .attr("opacity", 1)
 
     }
 

@@ -154,7 +154,7 @@ function drawGraphic1(container_width) {
 
     var annotation = svg.append("text")
         .attr("class", "annotation")
-        .attr("y", -90)
+        .attr("y", -92)
         .attr("text-anchor", "middle")
         .text("More than half of families have less than $2,000 in nonretirement savings")
         .call(wrap2, width / 2, 2.25 * x.rangeBand());
@@ -171,13 +171,20 @@ function drawGraphic1(container_width) {
         .attr("x1", x("$0"))
         .attr("x2", x("$0"))
         .attr("y1", -10)
-        .attr("y2", -47);
+        .attr("y2", -48);
 
     svg.append("line")
         .attr("class", "annotate-line")
         .attr("x1", x("$750 - $1,999") + x.rangeBand())
         .attr("x2", x("$750 - $1,999") + x.rangeBand())
-        .attr("y1", -10)
+        .attr("y1", y(0.1))
+        .attr("y2", -48);
+    
+        svg.append("line")
+        .attr("class", "annotate-line")
+        .attr("x1", x("$1 - $249") + x.rangeBand())
+        .attr("x2", x("$1 - $249") + x.rangeBand())
+        .attr("y1", -55)
         .attr("y2", -47);
 }
 
