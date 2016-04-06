@@ -44,13 +44,22 @@ var step = 1;
 buttonStyle(1);
 
 function drawGraphic3(container_width) {
-    $('#btnnext').click(function () {
+    /*$('#btnnext').click(function () {
         graphChange("next");
     });
-
-    $('#btnprev').click(function () {
+        $('#btnprev').click(function () {
         graphChange("prev");
-    });
+    });*/
+
+    d3.select('#btnnext')
+        .on("click", function () {
+            graphChange("next");
+        });
+
+    d3.select('#btnprev')
+        .on("click", function () {
+            graphChange("prev");
+        });
 
     //on changing the step, change the graph
     function graphChange(direction) {

@@ -396,7 +396,7 @@ function drawGraphic3a(container_width) {
             top: 35,
             right: 45,
             bottom: -35,
-            left: 65
+            left: 70
         };
         var width = container_width - margin.left - margin.right,
             height = Math.ceil(width * chart_aspect_height) - margin.top - margin.bottom;
