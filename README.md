@@ -1,0 +1,1 @@
+# Graphics for financial capability feature
