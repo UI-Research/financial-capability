@@ -6,7 +6,7 @@ var LABELS = {
 };
 var LABELS_MOBILE = {
     "$0": "$0",
-    "$1-$2,000": "$1-$2k",
+    "$1-$1,999": "$1-$2k",
     "$2,000-$4,999": "$2k-$5k",
     "$5,000-$19,999": "$5k-$20k",
     "$20,000+": "$20k+"
@@ -742,6 +742,12 @@ function drawGraphic3(container_width) {
                 .duration(barappear)
                 .attr("opacity", 0)
                 .remove()
+            
+            d3.selectAll(".annotate-line")
+                .transition()
+                .duration(barappear)
+                .attr("opacity", 0)
+                .remove()
 
         }
     }
@@ -751,7 +757,17 @@ function drawGraphic3(container_width) {
             .html(graphtext.graph5);
 
         if (isMobile) {
-
+            annotateshape.append("line")
+                .attr("class", "annotate-line")
+                .attr("opacity", 0)
+                .attr("id", "annontateshape")
+                .attr("y1", y("$2,000-$4,999") + 0.5*y.rangeBand())
+                .attr("y2", y("$0") + 0.5*y.rangeBand())
+                .attr("x1", x(0.20))
+                .attr("x2", x(0.30))
+                .transition()
+                .duration(barappear)
+                .attr("opacity", 1);
 
         } else {
             annotateshape.append("ellipse")

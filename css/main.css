@@ -72,18 +72,11 @@ body {
     font-size: 13px;
 }
 
-/*.annotateline {
-    fill: none;
-    stroke-width: 25px;
-    stroke: #ebebeb;
-    shape-rendering: crispEdges;
-}*/
-
 .annotate-line {
     fill: none;
-    stroke-width: 3px;
+    stroke-width: 5px;
     stroke: #e3e3e3;
-    shape-rendering: crispEdges;
+    /*shape-rendering: crispEdges;*/
 }
 
 .axistitle {
@@ -92,7 +85,6 @@ body {
 }
 
 .income1 {
-    /*fill: #ec008b;*/
     fill: #5c5859;
 }
 
@@ -101,7 +93,6 @@ body {
 }
 
 .income3 {
-    /*fill: #55b748;*/
     fill: #1696d2;
 }
 
@@ -113,7 +104,7 @@ body {
 /*Graph 3*/
 
 #graphtext {
-    min-height: 2em;
+    min-height: 2.2em;
     display: block;
     margin-top: 0.5em;
 }
