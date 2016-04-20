@@ -42,7 +42,7 @@ function buttonStyle(step) {
 var graph = "graph";
 var step = 1;
 buttonStyle(1);
-var d, t, timelapse;
+var timelapse;
 
 function drawGraphic3(container_width) {
     var d = new Date();
@@ -86,7 +86,7 @@ function drawGraphic3(container_width) {
             if (timelapse <= 2200) {
                 setTimeout(function () {
                     graph2(direction);
-                }, 2200 - timer);
+                }, 2200 - timelapse);
             } else {
                 graph2(direction);
             }
@@ -99,7 +99,7 @@ function drawGraphic3(container_width) {
             if (timelapse <= 2200) {
                 setTimeout(function () {
                     graph3(direction);
-                }, 2200 - timer);
+                }, 2200 - timelapse);
             } else {
                 graph3(direction);
             }
@@ -109,7 +109,7 @@ function drawGraphic3(container_width) {
             if (timelapse <= 2200) {
                 setTimeout(function () {
                     graph4(direction);
-                }, 2200 - timer);
+                }, 2200 - timelapse);
             } else {
                 graph4(direction);
             }
@@ -119,7 +119,7 @@ function drawGraphic3(container_width) {
             if (timelapse <= 2200) {
                 setTimeout(function () {
                     graph5(direction);
-                }, 2200 - timer);
+                }, 2200 - timelapse);
             } else {
                 graph5(direction);
             }
