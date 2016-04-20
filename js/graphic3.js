@@ -42,27 +42,34 @@ function buttonStyle(step) {
 var graph = "graph";
 var step = 1;
 buttonStyle(1);
+var d, t, timelapse;
 
 function drawGraphic3(container_width) {
-    /*$('#btnnext').click(function () {
-        graphChange("next");
-    });
-        $('#btnprev').click(function () {
-        graphChange("prev");
-    });*/
+    var d = new Date();
+    var t = d.getTime();
+    var timer = t;
+
+    function resetTime() {
+        d = new Date();
+        t = d.getTime();
+        timelapse = t - timer;
+        timer = t;
+    }
 
     d3.select('#btnnext')
         .on("click", function () {
-            graphChange("next");
+            resetTime();
+            graphChange("next", timelapse);
         });
 
     d3.select('#btnprev')
         .on("click", function () {
-            graphChange("prev");
+            resetTime();
+            graphChange("prev", timelapse);
         });
 
     //on changing the step, change the graph
-    function graphChange(direction) {
+    function graphChange(direction, timelapse) {
         if (direction == "next") {
             step = step < 5 ? step + 1 : step;
         } else if (direction == "prev") {
@@ -71,19 +78,51 @@ function drawGraphic3(container_width) {
         buttonStyle(step);
         switch (step) {
         case 1:
+            console.log(timelapse);
             graph1(direction);
             break;
         case 2:
-            graph2(direction);
+            console.log(timelapse);
+            if (timelapse <= 2200) {
+                setTimeout(function () {
+                    graph2(direction);
+                }, 2200 - timer);
+            } else {
+                graph2(direction);
+            }
+            //setTimeout(function () {
+            //    graph2(direction);
+            //}, 2000);
             break;
         case 3:
-            graph3(direction);
+            console.log(timelapse);
+            if (timelapse <= 2200) {
+                setTimeout(function () {
+                    graph3(direction);
+                }, 2200 - timer);
+            } else {
+                graph3(direction);
+            }
             break;
         case 4:
-            graph4(direction);
+            console.log(timelapse);
+            if (timelapse <= 2200) {
+                setTimeout(function () {
+                    graph4(direction);
+                }, 2200 - timer);
+            } else {
+                graph4(direction);
+            }
             break;
         case 5:
-            graph5();
+            console.log(timelapse);
+            if (timelapse <= 2200) {
+                setTimeout(function () {
+                    graph5(direction);
+                }, 2200 - timer);
+            } else {
+                graph5(direction);
+            }
             break;
         }
     }
@@ -228,22 +267,8 @@ function drawGraphic3(container_width) {
         bardelay = 1500,
         barappear = 700;
 
-    function newbars(v) {
-        bars.append("rect")
-            .attr("class", v)
-            .attr("x", x(0))
-            .attr("width", function (d) {
-                return Math.abs(x(0) - x(d[v]));
-            })
-            .attr("y", function (d) {
-                return y(d.assets);
-            })
-            .attr("height", y.rangeBand())
-            .attr("rx", 0)
-            .attr("ry", 0);
-    }
-
     function graph1(direction) {
+
         d3.select("#graphtext")
             .html(graphtext.graph1);
 
@@ -342,6 +367,7 @@ function drawGraphic3(container_width) {
     }
 
     function graph2(direction) {
+
         d3.select("#graphtext")
             .html(graphtext.graph2);
 
@@ -535,6 +561,7 @@ function drawGraphic3(container_width) {
     }
 
     function graph3(direction) {
+
         d3.select("#graphtext")
             .html(graphtext.graph3);
 
@@ -742,7 +769,7 @@ function drawGraphic3(container_width) {
                 .duration(barappear)
                 .attr("opacity", 0)
                 .remove()
-            
+
             d3.selectAll(".annotate-line")
                 .transition()
                 .duration(barappear)
@@ -761,8 +788,8 @@ function drawGraphic3(container_width) {
                 .attr("class", "annotate-line")
                 .attr("opacity", 0)
                 .attr("id", "annontateshape")
-                .attr("y1", y("$2,000-$4,999") + 0.5*y.rangeBand())
-                .attr("y2", y("$0") + 0.5*y.rangeBand())
+                .attr("y1", y("$2,000-$4,999") + 0.5 * y.rangeBand())
+                .attr("y2", y("$0") + 0.5 * y.rangeBand())
                 .attr("x1", x(0.20))
                 .attr("x2", x(0.30))
                 .transition()
