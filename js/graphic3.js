@@ -69,7 +69,7 @@ function drawGraphic3(container_width) {
         });
 
     //on changing the step, change the graph
-    function graphChange(direction, timelapse) {
+    function graphChange(direction, tl) {
         if (direction == "next") {
             step = step < 5 ? step + 1 : step;
         } else if (direction == "prev") {
@@ -78,15 +78,16 @@ function drawGraphic3(container_width) {
         buttonStyle(step);
         switch (step) {
         case 1:
-            console.log(timelapse);
+            console.log(tl);
             graph1(direction);
             break;
         case 2:
-            console.log(timelapse);
-            if (timelapse <= 2200) {
+            console.log(tl);
+            if (tl <= 2200) {
+                console.log("FOO")
                 setTimeout(function () {
                     graph2(direction);
-                }, 2200 - timelapse);
+                }, 2200 - tl);
             } else {
                 graph2(direction);
             }
@@ -95,31 +96,32 @@ function drawGraphic3(container_width) {
             //}, 2000);
             break;
         case 3:
-            console.log(timelapse);
-            if (timelapse <= 2200) {
+            console.log(tl);
+            if (tl <= 4200) {
+                console.log("BAR")
                 setTimeout(function () {
                     graph3(direction);
-                }, 2200 - timelapse);
+                }, 4200 - tl);
             } else {
                 graph3(direction);
             }
             break;
         case 4:
-            console.log(timelapse);
-            if (timelapse <= 2200) {
+            console.log(tl);
+            if (tl <= 4200) {
                 setTimeout(function () {
                     graph4(direction);
-                }, 2200 - timelapse);
+                }, 4200 - tl);
             } else {
                 graph4(direction);
             }
             break;
         case 5:
-            console.log(timelapse);
-            if (timelapse <= 2200) {
+            console.log(tl);
+            if (tl <= 4200) {
                 setTimeout(function () {
                     graph5(direction);
-                }, 2200 - timelapse);
+                }, 4200 - tl);
             } else {
                 graph5(direction);
             }
