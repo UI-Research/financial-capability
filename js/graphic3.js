@@ -42,7 +42,8 @@ function buttonStyle(step) {
 var graph = "graph";
 var step = 1;
 buttonStyle(1);
-var timelapse;
+var timelapse = 0;
+var clicks = 0;
 
 function drawGraphic3(container_width) {
     var d = new Date();
@@ -52,13 +53,21 @@ function drawGraphic3(container_width) {
     function resetTime() {
         d = new Date();
         t = d.getTime();
-        timelapse = t - timer;
+        timelapse = (t - timer) + timelapse;
         timer = t;
     }
 
     d3.select('#btnnext')
         .on("click", function () {
-            resetTime();
+            clicks = clicks + 1;
+            if (clicks == 1) {
+                d = new Date();
+                t = d.getTime();
+                timelapse = 0;
+                timer = t;
+            } else {
+                resetTime();
+            }
             graphChange("next", timelapse);
         });
 
@@ -78,50 +87,47 @@ function drawGraphic3(container_width) {
         buttonStyle(step);
         switch (step) {
         case 1:
-            console.log(tl);
+            timelapse = 0;
+            //console.log(tl);
             graph1(direction);
             break;
         case 2:
-            console.log(tl);
-            if (tl <= 2200) {
+            //console.log(tl);
+            /*if (tl <= 3000) {
                 console.log("FOO")
                 setTimeout(function () {
                     graph2(direction);
-                }, 2200 - tl);
-            } else {
-                graph2(direction);
-            }
-            //setTimeout(function () {
-            //    graph2(direction);
-            //}, 2000);
+                }, 3000 - tl);
+            } else {*/
+            graph2(direction);
+            //}
             break;
         case 3:
-            console.log(tl);
-            if (tl <= 4200) {
-                console.log("BAR")
+            //console.log(tl);
+            if (tl <= 3000) {
                 setTimeout(function () {
                     graph3(direction);
-                }, 4200 - tl);
+                }, 3000 - tl);
             } else {
                 graph3(direction);
             }
             break;
         case 4:
-            console.log(tl);
-            if (tl <= 4200) {
+            //console.log(tl);
+            if (tl <= 6000) {
                 setTimeout(function () {
                     graph4(direction);
-                }, 4200 - tl);
+                }, 6000 - tl);
             } else {
                 graph4(direction);
             }
             break;
         case 5:
-            console.log(tl);
-            if (tl <= 4200) {
+            //console.log(tl);
+            if (tl <= 9000) {
                 setTimeout(function () {
                     graph5(direction);
-                }, 4200 - tl);
+                }, 9000 - tl);
             } else {
                 graph5(direction);
             }
