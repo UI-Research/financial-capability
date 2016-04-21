@@ -374,7 +374,7 @@ function drawGraphic2(container_width) {
         });
 }
 
-//horizontal split bar chart
+//grouped bar chart
 function drawGraphic3a(container_width) {
     var LABELS = ["Missed housing payment", "Missed utility payment", "Received public benefits"];
     var VALUES = ["hardship3", "hardship2", "hardship1"];
@@ -422,6 +422,7 @@ function drawGraphic3a(container_width) {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+    //on mobile, stack vertically
     if (isMobile) {
         var x = d3.scale.linear()
             .range([0, width])
@@ -473,7 +474,7 @@ function drawGraphic3a(container_width) {
             svg.append("text")
                 .attr("class", "subtitle")
                 .attr("x", 0)
-                .attr("y",  (height / 3) * i - 12)
+                .attr("y", (height / 3) * i - 12)
                 .attr("text-anchor", "start")
                 .text(LABELS[i])
                 .call(wrap, width);
@@ -500,6 +501,7 @@ function drawGraphic3a(container_width) {
                     return d3.format("%")(d[VALUES[i]]);
                 });
         }
+        //on big screens, stack horizontally and space based on max val in group
     } else {
         var y = d3.scale.ordinal()
             .rangeRoundBands([height, 0], .1)

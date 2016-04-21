@@ -12,7 +12,6 @@ var LABELS_MOBILE = {
     "$20,000+": "$20k+"
 };
 
-
 var graphtext = {
     graph1: "Low-income families experience some hardship after an income disruption, but more savings help lessen the blow.",
     graph2: "High-income families experience less hardship overall, but the savings pattern still stands.",
@@ -46,10 +45,16 @@ var timelapse = 0;
 var clicks = 0;
 
 function drawGraphic3(container_width) {
+
+    //in case users click really quickly, use a timer to setTimeout between steps
+    //we still want them to be walked through the graph
+
     var d = new Date();
     var t = d.getTime();
     var timer = t;
 
+    //on click, the timelapse is set to previous time plus the time since they last clicked the button
+    //except if it's their first click, then timelapse = 0
     function resetTime() {
         d = new Date();
         t = d.getTime();
@@ -57,6 +62,7 @@ function drawGraphic3(container_width) {
         timer = t;
     }
 
+    //each graph has forwards and backwards animations, so the direction is passed to the graph functions
     d3.select('#btnnext')
         .on("click", function () {
             clicks = clicks + 1;
@@ -88,22 +94,12 @@ function drawGraphic3(container_width) {
         switch (step) {
         case 1:
             timelapse = 0;
-            //console.log(tl);
             graph1(direction);
             break;
         case 2:
-            //console.log(tl);
-            /*if (tl <= 3000) {
-                console.log("FOO")
-                setTimeout(function () {
-                    graph2(direction);
-                }, 3000 - tl);
-            } else {*/
             graph2(direction);
-            //}
             break;
         case 3:
-            //console.log(tl);
             if (tl <= 3000) {
                 setTimeout(function () {
                     graph3(direction);
@@ -113,7 +109,6 @@ function drawGraphic3(container_width) {
             }
             break;
         case 4:
-            //console.log(tl);
             if (tl <= 6000) {
                 setTimeout(function () {
                     graph4(direction);
@@ -123,7 +118,6 @@ function drawGraphic3(container_width) {
             }
             break;
         case 5:
-            //console.log(tl);
             if (tl <= 9000) {
                 setTimeout(function () {
                     graph5(direction);
@@ -251,6 +245,7 @@ function drawGraphic3(container_width) {
         })
         .classed("minor", true);
 
+    //set up circle, bar, and line groups that will be used later
     var circleradius = 7;
 
     var lines = svg.selectAll(".line")
@@ -280,6 +275,7 @@ function drawGraphic3(container_width) {
         d3.select("#graphtext")
             .html(graphtext.graph1);
 
+        //forward transition (here, initial appearance)
         if (direction == "next") {
             bars.append("rect")
                 .attr("class", "income1")
@@ -294,6 +290,7 @@ function drawGraphic3(container_width) {
                 .attr("rx", 0)
                 .attr("ry", 0);
 
+            //legend item
             svg.append("circle")
                 .attr("class", function (d) {
                     return "income1";
@@ -327,6 +324,7 @@ function drawGraphic3(container_width) {
                     return LABELS["income1"];
                 });
 
+            //backwards transition
         } else if (direction == "prev") {
 
             d3.selectAll("rect.income3")
@@ -791,6 +789,7 @@ function drawGraphic3(container_width) {
         d3.select("#graphtext")
             .html(graphtext.graph5);
 
+        //add a shape highlighting the three featured points - thick line or ellipse
         if (isMobile) {
             annotateshape.append("line")
                 .attr("class", "annotate-line")
@@ -820,6 +819,7 @@ function drawGraphic3(container_width) {
         }
     }
 
+    //initial state
     graph1("next");
 
 }
